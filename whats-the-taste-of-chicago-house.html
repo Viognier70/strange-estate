@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Experience the taste of Old School Chicago House? — Strange Estate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=BioRhyme:wght@300;400;700;800&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --orange: #ff6900;
+      --cream: #f5f0e8;
+      --dark: #111111;
+      --text: #1a1a1a;
+      --muted: #888;
+      --border: rgba(255,105,0,0.18);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--cream);
+      color: var(--text);
+      font-family: 'Manrope', sans-serif;
+      font-weight: 400;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--dark);
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255,105,0,0.25);
+    }
+
+    .logo {
+      font-family: 'BioRhyme', serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--orange);
+      text-decoration: none;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    /* ── NAV ── */
+    nav { display: flex; align-items: center; }
+
+    nav a {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      margin-left: 1.6rem;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    nav a:hover { color: var(--orange); }
+
+    .has-submenu {
+      position: relative;
+      margin-left: 1.6rem;
+    }
+    .has-submenu > a {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .has-submenu > a::after { content: '▾'; font-size: 0.6rem; opacity: 0.5; }
+    .has-submenu:hover > a { color: var(--orange); }
+
+    .submenu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 1rem);
+      left: 0;
+      background: #1a1a1a;
+      border: 1px solid rgba(255,105,0,0.2);
+      border-radius: 8px;
+      min-width: 210px;
+      padding: 0.4rem 0;
+      z-index: 200;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+    }
+    .has-submenu:hover .submenu { display: block; }
+    .submenu a {
+      display: block;
+      padding: 0.5rem 1.1rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      margin-left: 0 !important;
+      transition: color 0.15s, background 0.15s;
+    }
+    .submenu a:hover { color: var(--orange); background: rgba(255,105,0,0.06); }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 6px;
+      padding: 0.35rem 0.55rem;
+      cursor: pointer;
+      color: white;
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    @media (max-width: 860px) {
+      .menu-toggle { display: block; }
+      nav {
+        display: none;
+        position: absolute;
+        top: 64px; left: 0; right: 0;
+        background: #111;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem 1.5rem 1.5rem;
+        border-bottom: 1px solid rgba(255,105,0,0.2);
+      }
+      nav.open { display: flex; }
+      nav a { margin-left: 0; padding: 0.5rem 0; font-size: 0.8rem; }
+      .has-submenu { margin-left: 0; width: 100%; }
+      .has-submenu > a { padding: 0.5rem 0; font-size: 0.8rem; }
+      .submenu {
+        position: static; display: block;
+        background: rgba(255,255,255,0.03);
+        border: none; border-left: 2px solid var(--orange);
+        border-radius: 0; box-shadow: none;
+        padding: 0.2rem 0 0.2rem 0.8rem;
+        margin-bottom: 0.4rem;
+      }
+      .submenu a { font-size: 0.72rem; padding: 0.35rem 0.8rem; }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--dark);
+      color: white;
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 60% 40%, rgba(255,105,0,0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--orange); font-weight: 600; margin-bottom: 1.4rem;
+      border: 1px solid rgba(255,105,0,0.35);
+      padding: 0.32rem 0.85rem; border-radius: 2rem;
+    }
+    .hero h1 {
+      font-family: 'BioRhyme', serif;
+      font-size: clamp(2rem, 5.5vw, 4rem);
+      font-weight: 800; line-height: 1.1;
+      max-width: 740px; margin: 0 auto 1.6rem;
+    }
+    .hero h1 em { font-style: italic; color: var(--orange); }
+    .hero-meta { font-size: 0.76rem; color: rgba(255,255,255,0.35); letter-spacing: 0.08em; text-transform: uppercase; }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 780px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ── PRODUCT CARD ── */
+    .product-card {
+      background: var(--dark); color: white;
+      border-radius: 16px; overflow: hidden;
+      display: grid; grid-template-columns: 1fr 1fr;
+      margin: 3.5rem 0;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.12);
+    }
+    .product-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .product-card-content {
+      padding: 2.5rem 2rem;
+      display: flex; flex-direction: column; justify-content: center; gap: 1rem;
+    }
+    .product-card-label { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); font-weight: 600; }
+    .product-card h2 { font-family: 'BioRhyme', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.25; }
+    .product-card p { font-size: 0.88rem; color: rgba(255,255,255,0.6); line-height: 1.65; }
+
+    .btn-group { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 0.5rem; }
+    .btn {
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      text-decoration: none; padding: 0.6rem 1.3rem; border-radius: 2rem;
+      border: 1.5px solid var(--orange); color: var(--orange);
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn:hover { background: var(--orange); color: #fff; }
+    .btn-fill { background: var(--orange); color: #fff; }
+    .btn-fill:hover { background: #e05800; border-color: #e05800; }
+
+    /* ── ARTICLE ── */
+    .article-body { padding: 3rem 0 1rem; }
+    .article-body p { font-size: 1.05rem; line-height: 1.78; color: #2a2a2a; margin-bottom: 1.8rem; }
+    .article-body strong { font-weight: 600; color: var(--text); }
+
+    .pillars { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin: 2.5rem 0; }
+    .pillar {
+      background: var(--dark); border-radius: 12px;
+      padding: 1.5rem 1.4rem; border-left: 3px solid var(--orange); color: white;
+    }
+    .pillar-num { font-family: 'BioRhyme', serif; font-size: 2rem; font-weight: 800; color: var(--orange); line-height: 1; margin-bottom: 0.5rem; }
+    .pillar-title { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.5rem; color: rgba(255,255,255,0.9); }
+    .pillar p { font-size: 0.84rem; line-height: 1.6; color: rgba(255,255,255,0.55) !important; margin: 0 !important; }
+
+    .spotify-wrap { margin: 3rem 0; }
+    .spotify-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 0.8rem; }
+    .spotify-wrap iframe { border-radius: 12px; width: 100%; display: block; }
+
+    .divider { border: none; border-top: 1px solid rgba(0,0,0,0.1); margin: 3rem 0; }
+
+    footer {
+      background: var(--dark); color: rgba(255,255,255,0.4);
+      text-align: center; padding: 2.5rem 1rem;
+      font-size: 0.78rem; letter-spacing: 0.06em;
+      border-top: 1px solid rgba(255,105,0,0.15); margin-top: 5rem;
+    }
+    footer a { color: var(--orange); text-decoration: none; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-eyebrow { animation: fadeUp 0.6s ease both 0s; }
+    .hero h1      { animation: fadeUp 0.6s ease both 0.12s; }
+    .hero-meta    { animation: fadeUp 0.6s ease both 0.24s; }
+
+    @media (max-width: 640px) {
+      .product-card { grid-template-columns: 1fr; }
+      .product-card img { max-height: 280px; }
+      .pillars { grid-template-columns: 1fr; }
+      .hero { padding: 3.5rem 1.2rem 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="logo" href="index.html">Strange Estate</a>
+
+    <button class="menu-toggle" onclick="this.nextElementSibling.classList.toggle('open')" aria-label="Toggle menu">☰</button>
+
+    <nav>
+      <a href="https://strangeestate.com/#products">Wines &amp; Products</a>
+
+      <div class="has-submenu">
+        <a href="https://strangeestate.com/#brands">Our Brands</a>
+        <div class="submenu">
+          <a href="https://strangeestate.com/underground.html">Underground Wines</a>
+          <a href="https://strangeestate.com/rewind.html">Rewind Spritzers</a>
+          <a href="https://strangeestate.com/premium.html">Premium Cocktails</a>
+          <a href="https://strangeestate.com/revolte.html">Domaine de Révolte</a>
+        </div>
+      </div>
+
+      <a href="https://strangeestate.com/#method">The Method</a>
+      <a href="https://strangeestate.com/#newsletter">Newsletter</a>
+      <a href="https://strangeestate.com/#contact">Contact</a>
+      <a href="https://strangeestate.com/restaurang.html">Restaurang</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div class="container">
+      <span class="hero-eyebrow">Music &amp; Wine</span>
+      <h1>Experience the taste of <em>Old School Chicago House?</em></h1>
+      <p class="hero-meta">Strange Estate &nbsp;·&nbsp; March 2026</p>
+    </div>
+  </div>
+
+  <main>
+    <div class="container">
+
+      <div class="product-card">
+        <img
+          src="https://strangeestate.com/alla produktbilder i samma format/u_white3.png"
+          alt="Underground White No. 3"
+        />
+        <div class="product-card-content">
+          <p class="product-card-label">Featured Wine</p>
+          <h2>Underground White No. 3</h2>
+          <p>A textured, aromatic white with generous fruit and moderate acidity — built for flow, not complexity.</p>
+          <div class="btn-group">
+            <a class="btn btn-fill" href="https://strangeestate.com/produkt/underground-white-bib-3-liter/" target="_blank" rel="noopener">Learn More</a>
+            <a class="btn" href="https://www.systembolaget.se/produkt/vin/underground-7685808/?" target="_blank" rel="noopener">Systembolaget</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="article-body">
+
+        <p>This style works because its <strong>structure and sensory profile mirror the atmosphere of old school Chicago house</strong>. The music is built on warm basslines, looping rhythms, and a steady, immersive groove rather than sharp contrasts or aggressive intensity. A textured, aromatic white wine with generous fruit and moderate acidity follows the same logic.</p>
+
+        <div class="pillars">
+          <div class="pillar">
+            <div class="pillar-num">01</div>
+            <div class="pillar-title">Round Mouthfeel &amp; Soft Texture</div>
+            <p>Corresponds to the music's warm analog sound — the wine's smooth body provides a stable, enveloping sensory base, just like Chicago house's continuous bassline.</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-num">02</div>
+            <div class="pillar-title">Ripe Fruit &amp; Floral Aromatics</div>
+            <p>Early house music carries emotional warmth and openness. Aromatic white wines evoke a similar feeling through layered, inviting scents rather than austere precision.</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-num">03</div>
+            <div class="pillar-title">Moderate Acidity</div>
+            <p>Maintains rhythm and balance — keeping the wine lively without becoming sharp or dominating, much like hi-hats and percussion that sustain energy without interrupting the groove.</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-num">04</div>
+            <div class="pillar-title">Flow Over Complexity</div>
+            <p>Neither the wine nor the music relies on abrupt changes. Both create a continuous, pleasurable experience that encourages immersion, sociability, and repetition.</p>
+          </div>
+        </div>
+
+        <p>Finally, this style works because both the wine and the music emphasize <strong>flow over complexity</strong>. Neither relies on abrupt changes or intellectual intensity. Instead, they create a continuous, pleasurable experience that encourages immersion, sociability, and repetition — qualities that define both a great groove and a great glass of wine.</p>
+
+      </div>
+
+      <hr class="divider" />
+
+      <div class="spotify-wrap">
+        <p class="spotify-label">Listen while you pour</p>
+        <iframe
+          title="Spotify Embed: Underground White no 3"
+          height="352"
+          frameborder="0"
+          allowfullscreen
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+          src="https://open.spotify.com/embed/playlist/5gJhDyNdAHWBFaOOEZhyWa?si=3d101179d3cd4fe3&utm_source=oembed"
+        ></iframe>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2026 <a href="index.html">Strange Estate</a> &nbsp;·&nbsp; The Planet is our Domain</p>
+  </footer>
+
+</body>
+</html>
