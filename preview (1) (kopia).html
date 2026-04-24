@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strange Estate — Förhandsgranskning</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #0a0a0a;
+  --white: #f2ede6;
+  --orange: #fa6000;
+  --teal: #5ce1e6;
+  --yellow: #FFEE58;
+  --pink: #fdbbe0;
+  --navy: #16213f;
+  --mid: #2a2a2a;
+  --uw: #a2d9c0;
+  --rw: #fdbbe0;
+  --dr: #e8e2c8;
+  --pc: #ffb6a6;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--black); color: var(--white); font-family: 'Space Grotesk', sans-serif; font-weight: 300; }
+
+/* NAV */
+nav { background: rgba(10,10,10,.96); padding: 16px 48px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,.05); position: sticky; top: 0; z-index: 100; }
+.nav-logo { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+.nav-logo-mark { width: 44px; height: 44px; border: 2px solid var(--orange); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; }
+.nav-logo-mark span { transform: rotate(-45deg); font-family: 'Bebas Neue'; font-size: 10px; color: var(--orange); letter-spacing: 1px; line-height: 1; text-align: center; }
+.nav-logo-text { font-family: 'Bebas Neue'; font-size: 20px; letter-spacing: 4px; color: var(--white); }
+.nav-logo-text em { color: var(--orange); font-style: normal; }
+.nav-links { display: flex; gap: 28px; list-style: none; }
+.nav-links a { color: var(--white); text-decoration: none; font-size: 10px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; opacity: .48; }
+.nav-links a:hover { opacity: 1; color: var(--orange); }
+.nav-cta { background: var(--orange); color: var(--black) !important; opacity: 1 !important; padding: 9px 20px; font-weight: 700 !important; }
+
+/* SECTION UTILS */
+.sl { font-size: 10px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--orange); display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.sl::before { content: ''; width: 24px; height: 1px; background: var(--orange); }
+.sh { font-family: 'Bebas Neue'; font-size: clamp(40px,5.5vw,66px); letter-spacing: 2px; line-height: 1; }
+section { padding: 80px 48px; }
+.inner { max-width: 1240px; margin: 0 auto; }
+
+/* ── HERO ── */
+.hero { min-height: 85vh; display: flex; align-items: center; background: radial-gradient(ellipse at 20% 70%, rgba(255,182,166,.08) 0%, transparent 55%), var(--black); padding: 120px 48px 80px; }
+.hero-inner { max-width: 1240px; width: 100%; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.hero-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--orange); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+.hero-eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--orange); }
+h1.hero-title { font-family: 'Bebas Neue'; font-size: clamp(68px,9vw,120px); line-height: .9; letter-spacing: 2px; margin-bottom: 26px; }
+h1.hero-title .t2 { color: var(--orange); }
+h1.hero-title .t3 { font-family: 'Instrument Serif'; font-style: italic; font-size: clamp(42px,5.2vw,72px); color: #edede6; display: block; line-height: 1.1; }
+.hero-desc { font-size: 15px; line-height: 1.78; color: #edede6; max-width: 400px; margin-bottom: 34px; }
+.hero-desc strong { color: var(--white); font-weight: 600; }
+.btn { display: inline-block; font-family: 'Space Grotesk'; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; padding: 15px 32px; }
+.btn-primary { background: var(--orange); color: var(--black); clip-path: polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px)); }
+.btn-outline { border: 1px solid rgba(242,237,230,.2); color: var(--white); }
+.hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 28px; }
+.hero-right { display: flex; flex-direction: column; gap: 14px; }
+.hero-cassette { width: 100%; background: #111; display: flex; align-items: center; justify-content: center; height: 200px; border: 1px solid rgba(255,255,255,.06); }
+.hero-cassette-placeholder { font-family: 'Bebas Neue'; font-size: 32px; letter-spacing: 4px; color: var(--orange); opacity: .4; }
+.hero-prod-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+.hp { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: #0d0d0d; border: 1px solid rgba(255,255,255,.07); font-family: 'Bebas Neue'; font-size: 9px; letter-spacing: 2px; color: rgba(255,255,255,.2); text-align: center; padding: 4px; }
+.hp.uw { border-color: rgba(162,217,192,.2); }
+.hp.rw { border-color: rgba(253,187,224,.2); }
+.hp.dr { border-color: rgba(232,226,200,.2); }
+.hp.pc { border-color: rgba(255,182,166,.2); }
+
+/* MARQUEE */
+.marquee { border-top: 1px solid rgba(255,255,255,.05); border-bottom: 1px solid rgba(255,255,255,.05); padding: 11px 0; overflow: hidden; background: rgba(255,182,166,.02); }
+.mtrack { display: flex; animation: mq 22s linear infinite; white-space: nowrap; }
+.mi { font-family: 'Bebas Neue'; font-size: 11px; letter-spacing: 3px; color: #edede6; padding: 0 28px; border-right: 1px solid rgba(255,255,255,.06); flex-shrink: 0; }
+.mi em { color: var(--orange); font-style: normal; }
+@keyframes mq { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* POSTER */
+.poster-block { background: var(--black); display: flex; align-items: center; justify-content: center; padding: 40px 48px; border-top: 1px solid rgba(255,255,255,.04); border-bottom: 1px solid rgba(255,255,255,.04); }
+.poster-inner { max-width: 860px; width: 100%; background: #f0ece4; display: flex; align-items: stretch; min-height: 260px; overflow: hidden; position: relative; }
+.poster-left { padding: 40px; flex: 1; }
+.poster-left h2 { font-family: 'Bebas Neue'; font-size: 36px; letter-spacing: 2px; color: #0a0a0a; line-height: 1; margin-bottom: 16px; }
+.poster-left p { font-size: 12px; font-weight: 700; letter-spacing: 1px; color: #0a0a0a; line-height: 1.6; margin-bottom: 8px; }
+.poster-right { width: 280px; background: #0a0a0a; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 24px; gap: 12px; }
+.poster-title { font-family: 'Bebas Neue'; font-size: 22px; letter-spacing: 3px; color: var(--orange); text-align: center; }
+.poster-brands { display: flex; gap: 14px; align-items: center; justify-content: center; flex-wrap: wrap; }
+.brand-pill { font-family: 'Bebas Neue'; font-size: 9px; letter-spacing: 2px; padding: 4px 10px; border: 1px solid; }
+.brand-pill.uw { color: var(--uw); border-color: var(--uw); }
+.brand-pill.rw { color: var(--rw); border-color: var(--rw); }
+.brand-pill.dr { color: var(--dr); border-color: var(--dr); }
+.brand-pill.pc { color: var(--pc); border-color: var(--pc); }
+.poster-tagline { font-size: 9px; letter-spacing: 2px; color: rgba(255,255,255,.3); text-transform: uppercase; text-align: center; }
+
+/* BRANDS */
+.brands-sec { background: rgba(255,255,255,.012); }
+.bgrid { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; margin-top: 52px; }
+.bc { position: relative; overflow: hidden; padding: 0; display: flex; flex-direction: column; min-height: 420px; transition: transform .3s; }
+.bc:hover { transform: translateY(-4px); }
+.bc-uw { background: linear-gradient(145deg,#16213f,#0b1422); border: 2px solid rgba(162,217,192,.25); }
+.bc-rw { background: linear-gradient(145deg,#1a0027,#0e0017); border: 2px solid rgba(253,187,224,.25); }
+.bc-dr { background: linear-gradient(145deg,#1d1b00,#0f0e00); border: 2px solid rgba(232,226,200,.25); }
+.bc-pc { background: linear-gradient(145deg,#1f0900,#100500); border: 2px solid rgba(255,182,166,.25); }
+.bc-hero { width: 100%; height: 180px; overflow: hidden; background: rgba(0,0,0,.3); display: flex; align-items: center; justify-content: center; }
+.bc-hero-placeholder { font-family: 'Bebas Neue'; font-size: 64px; letter-spacing: 4px; opacity: .06; }
+.bc-uw .bc-hero-placeholder { color: var(--uw); }
+.bc-rw .bc-hero-placeholder { color: var(--rw); }
+.bc-dr .bc-hero-placeholder { color: var(--dr); }
+.bc-pc .bc-hero-placeholder { color: var(--pc); }
+.bc-body { padding: 24px 28px 28px; display: flex; flex-direction: column; flex: 1; }
+.bc-num { font-family: 'Bebas Neue'; font-size: 10px; letter-spacing: 3px; opacity: .2; margin-bottom: 4px; }
+.bc-name { font-family: 'Bebas Neue'; font-size: 32px; letter-spacing: 2px; line-height: 1; margin-bottom: 10px; }
+.bc-uw .bc-name { color: var(--uw); }
+.bc-rw .bc-name { color: var(--rw); }
+.bc-dr .bc-name { color: var(--dr); }
+.bc-pc .bc-name { color: var(--pc); }
+
+/* Product list inside brand card */
+.bc-prodlist { margin: 14px 0; border-top: 1px solid rgba(255,255,255,.05); }
+.bc-proditem { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,.04); }
+.bc-prodthumb { width: 32px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid; border-radius: 2px; flex-shrink: 0; }
+.bc-uw .bc-prodthumb { border-color: rgba(162,217,192,.2); background: rgba(162,217,192,.05); }
+.bc-rw .bc-prodthumb { border-color: rgba(253,187,224,.2); background: rgba(253,187,224,.05); }
+.bc-dr .bc-prodthumb { border-color: rgba(232,226,200,.2); background: rgba(232,226,200,.05); }
+.bc-pc .bc-prodthumb { border-color: rgba(255,182,166,.2); background: rgba(255,182,166,.05); }
+.bc-prodname { font-size: 12px; color: var(--white); flex: 1; }
+.bc-prodprice { font-size: 13px; font-weight: 700; }
+.bc-uw .bc-prodprice { color: var(--uw); }
+.bc-rw .bc-prodprice { color: var(--rw); }
+.bc-dr .bc-prodprice { color: var(--dr); }
+.bc-pc .bc-prodprice { color: var(--pc); }
+
+.bc-desc { font-size: 13px; line-height: 1.65; color: #edede6; margin-bottom: 18px; flex: 1; }
+.bc-link { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; border: 1px solid; padding: 10px 18px; text-decoration: none; align-self: flex-start; transition: background .2s, color .2s; }
+.bc-uw .bc-link { border-color: var(--uw); color: var(--uw); }
+.bc-uw .bc-link:hover { background: var(--uw); color: var(--black); }
+.bc-rw .bc-link { border-color: var(--rw); color: var(--rw); }
+.bc-rw .bc-link:hover { background: var(--rw); color: var(--black); }
+.bc-dr .bc-link { border-color: var(--dr); color: var(--dr); }
+.bc-dr .bc-link:hover { background: var(--dr); color: var(--black); }
+.bc-pc .bc-link { border-color: var(--pc); color: var(--pc); }
+.bc-pc .bc-link:hover { background: var(--pc); color: var(--black); }
+.bc-alllnk { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.3); text-decoration: none; margin-right: 16px; }
+.bc-alllnk:hover { color: var(--white); }
+.bc-footer { display: flex; align-items: center; margin-top: 14px; }
+
+/* FILTER + PRODUCTS */
+.brand-filter { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
+.bf-btn { font-family: 'Space Grotesk'; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 9px 18px; border: 1px solid rgba(255,255,255,.12); background: transparent; color: rgba(242,237,230,.5); cursor: pointer; transition: all .2s; }
+.bf-btn:hover { border-color: var(--fc, rgba(255,255,255,.4)); color: var(--fc, var(--white)); }
+.bf-btn.active { background: var(--fc, var(--white)); border-color: var(--fc, var(--white)); color: var(--black); }
+.bf-btn[data-filter="all"].active { background: var(--white); border-color: var(--white); color: var(--black); }
+
+.pgrid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+.pc { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07); overflow: hidden; transition: border-color .3s, transform .3s; display: flex; flex-direction: column; position: relative; }
+.pc:hover { transform: translateY(-4px); }
+.pc-wrap { width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255,255,255,.05); }
+.pc-img-placeholder { font-family: 'Bebas Neue'; font-size: 11px; letter-spacing: 2px; opacity: .25; text-align: center; padding: 8px; }
+.pci { padding: 14px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.pct { font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; }
+.pcn { font-family: 'Bebas Neue'; font-size: 17px; letter-spacing: .5px; line-height: 1.1; }
+.pcp { font-size: 15px; font-weight: 700; }
+.pcv { font-size: 10px; color: #edede6; }
+.pcnote { font-size: 11px; color: #edede6; line-height: 1.5; flex: 1; }
+.pc-btn { display: block; margin: 0 14px 14px; border: 1px solid; padding: 9px; text-align: center; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; margin-top: auto; transition: background .2s; }
+
+/* Brand color variants for product cards */
+.pc[data-brand="uw"] .pc-wrap { background: rgba(162,217,192,.06); }
+.pc[data-brand="uw"] { border-color: rgba(162,217,192,.15); }
+.pc[data-brand="uw"]:hover { border-color: rgba(162,217,192,.5); }
+.pc[data-brand="uw"] .pcp, .pc[data-brand="uw"] .pct { color: var(--uw); }
+.pc[data-brand="uw"] .pc-btn { border-color: rgba(162,217,192,.3); color: var(--uw); background: rgba(162,217,192,.06); }
+.pc[data-brand="uw"] .pc-btn:hover { background: var(--uw); color: var(--black); border-color: var(--uw); }
+
+.pc[data-brand="rw"] .pc-wrap { background: rgba(253,187,224,.06); }
+.pc[data-brand="rw"] { border-color: rgba(253,187,224,.15); }
+.pc[data-brand="rw"]:hover { border-color: rgba(253,187,224,.5); }
+.pc[data-brand="rw"] .pcp, .pc[data-brand="rw"] .pct { color: var(--rw); }
+.pc[data-brand="rw"] .pc-btn { border-color: rgba(253,187,224,.3); color: var(--rw); background: rgba(253,187,224,.06); }
+.pc[data-brand="rw"] .pc-btn:hover { background: var(--rw); color: var(--black); border-color: var(--rw); }
+
+.pc[data-brand="dr"] .pc-wrap { background: rgba(232,226,200,.05); }
+.pc[data-brand="dr"] { border-color: rgba(232,226,200,.15); }
+.pc[data-brand="dr"]:hover { border-color: rgba(232,226,200,.5); }
+.pc[data-brand="dr"] .pcp, .pc[data-brand="dr"] .pct { color: var(--dr); }
+.pc[data-brand="dr"] .pc-btn { border-color: rgba(232,226,200,.3); color: var(--dr); background: rgba(232,226,200,.05); }
+.pc[data-brand="dr"] .pc-btn:hover { background: var(--dr); color: var(--black); border-color: var(--dr); }
+
+.pc[data-brand="pc"] .pc-wrap { background: rgba(255,182,166,.06); }
+.pc[data-brand="pc"] { border-color: rgba(255,182,166,.15); }
+.pc[data-brand="pc"]:hover { border-color: rgba(255,182,166,.5); }
+.pc[data-brand="pc"] .pcp, .pc[data-brand="pc"] .pct { color: var(--pc); }
+.pc[data-brand="pc"] .pc-btn { border-color: rgba(255,182,166,.3); color: var(--pc); background: rgba(255,182,166,.06); }
+.pc[data-brand="pc"] .pc-btn:hover { background: var(--pc); color: var(--black); border-color: var(--pc); }
+
+/* MUSIK FILTER */
+.musik-filter { display: flex; gap: 8px; flex-wrap: wrap; padding: 20px 48px; background: rgba(255,255,255,.015); border-top: 1px solid rgba(255,255,255,.04); border-bottom: 1px solid rgba(255,255,255,.04); }
+.mf-btn { font-family: 'Space Grotesk'; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 8px 16px; border: 1px solid rgba(255,255,255,.1); background: transparent; color: rgba(242,237,230,.45); cursor: pointer; transition: all .2s; }
+.mf-btn.active { background: var(--fc, var(--orange)); border-color: var(--fc, var(--orange)); color: var(--black); }
+.mf-btn[data-filter="all"].active { background: var(--orange); border-color: var(--orange); }
+.mf-btn[data-brand="uw"] { --fc: var(--uw); }
+.mf-btn[data-brand="rw"] { --fc: var(--rw); }
+.mf-btn[data-brand="dr"] { --fc: var(--dr); }
+.mf-btn[data-brand="pc"] { --fc: var(--pc); }
+
+/* PREVIEW LABEL */
+.preview-banner { background: rgba(255,182,166,.1); border-bottom: 1px solid rgba(255,182,166,.2); padding: 10px 48px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); font-weight: 700; text-align: center; }
+.note { font-size: 11px; color: rgba(242,237,230,.3); font-style: italic; text-align: center; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<div class="preview-banner">Förhandsgranskning — Strange Estate · Färgsystem & Struktur</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark"><span>SE</span></div>
+    <div class="nav-logo-text">STRANGE<em>.</em>ESTATE</div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#brands">Our Brands</a></li>
+    <li><a href="#musik">Musik & Vin</a></li>
+    <li><a href="#method">The Method</a></li>
+    <li><a href="#newsletter">Newsletter</a></li>
+    <li><a href="#contact" class="nav-cta">Kontakt</a></li>
+  </ul>
+  <button style="background:transparent;border:1px solid rgba(255,255,255,.2);color:var(--white);padding:6px 14px;font-family:'Space Grotesk';font-size:11px;font-weight:700;letter-spacing:2px;cursor:pointer;">EN</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">Stockholm · Upcycled Wines · Huddinge</div>
+      <h1 class="hero-title">UPCYCLED<br><span class="t2">&amp; FANTASTIC</span><span class="t3">Strange Estate</span></h1>
+      <p class="hero-desc">Ett svenskt vin- och dryckeskollektiv som behandlar vin som ett kreativt råmaterial — och skapar nya uttryck av högkvalitativa viner som annars gått till spillo.<br><br><strong>Mindre svinn. Bättre vin.</strong></p>
+      <div class="hero-ctas">
+        <a href="#brands" class="btn btn-primary">Utforska Brands</a>
+        <a href="#products" class="btn btn-outline">Wines & Products</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-cassette"><span class="hero-cassette-placeholder">REWIND MK-60</span></div>
+      <div class="hero-prod-row">
+        <div class="hp uw">Underground Red BiB</div>
+        <div class="hp rw">Rewind Rosé</div>
+        <div class="hp pc">Negroni Spritzer</div>
+        <div class="hp dr">Révolte 001</div>
+      </div>
+      <p class="note">Beställ via Systembolagets beställningssortiment</p>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="mtrack">
+    <div class="mi">UNDERGROUND WINES <em>✦</em></div>
+    <div class="mi">REWIND SPRITZERS <em>✦</em></div>
+    <div class="mi">DOMAINE DE RÉVOLTE SÖDERMALM <em>✦</em></div>
+    <div class="mi">PREMIUM COCKTAILS <em>✦</em></div>
+    <div class="mi">UPCYCLED &amp; FANTASTIC <em>✦</em></div>
+    <div class="mi">THE PLANET IS OUR DOMAIN <em>✦</em></div>
+    <div class="mi">UNDERGROUND WINES <em>✦</em></div>
+    <div class="mi">REWIND SPRITZERS <em>✦</em></div>
+    <div class="mi">DOMAINE DE RÉVOLTE SÖDERMALM <em>✦</em></div>
+    <div class="mi">PREMIUM COCKTAILS <em>✦</em></div>
+    <div class="mi">UPCYCLED &amp; FANTASTIC <em>✦</em></div>
+    <div class="mi">THE PLANET IS OUR DOMAIN <em>✦</em></div>
+  </div>
+</div>
+
+<!-- POSTER BLOCK (0126-2.png platshållare) -->
+<div class="poster-block">
+  <div class="poster-inner">
+    <div class="poster-left">
+      <h2>UPCYCLING AS<br>AESTHETIC PRACTICE</h2>
+      <p>WINE,<br>NOT REPLACED<br>BUT RE-FORMED.</p>
+      <p>WHAT REMAINS IS REFINED.<br>WHAT IS OVERLOOKED IS REDESIGNED.</p>
+      <p style="margin-top:16px;font-size:10px;letter-spacing:1px;opacity:.5;">STRANGEESTATE.COM</p>
+    </div>
+    <div class="poster-right">
+      <div class="poster-title">THE UPCYCLING WINERY</div>
+      <p style="font-size:9px;letter-spacing:1px;color:rgba(255,255,255,.4);text-align:center;text-transform:uppercase;">The Planet is our Domaine.</p>
+      <div class="poster-brands">
+        <span class="brand-pill uw">Underground</span>
+        <span class="brand-pill rw">Rewind</span>
+        <span class="brand-pill dr">Révolte</span>
+        <span class="brand-pill pc">Cocktails</span>
+      </div>
+      <p class="poster-tagline">01/26 · We rescue, upcycle &amp; reproduce wines risking to become waste</p>
+    </div>
+  </div>
+</div>
+
+<!-- BRANDS -->
+<section id="brands" class="brands-sec">
+  <div class="inner">
+    <div class="sl">Our Portfolio</div>
+    <h2 class="sh">Four Brands.<br>One Mission.</h2>
+    <div class="bgrid">
+
+      <!-- UNDERGROUND -->
+      <div class="bc bc-uw">
+        <div class="bc-hero"><div class="bc-hero-placeholder">UW</div></div>
+        <div class="bc-body">
+          <div class="bc-num">BRAND 01</div>
+          <div class="bc-name">Underground Wines</div>
+          <p class="bc-desc">Underground-serien utforskar struktur och balans i räddade viner. Fokus på harmoni mellan frukt, syra och textur. Rött · Vitt · Rosé · Sparkling</p>
+          <div class="bc-prodlist">
+            <div class="bc-proditem">
+              <div class="bc-prodthumb"></div>
+              <span class="bc-prodname">Underground Red BiB 3L</span>
+              <span class="bc-prodprice">249 kr</span>
+            </div>
+            <div class="bc-proditem">
+              <div class="bc-prodthumb"></div>
+              <span class="bc-prodname">Underground White BiB 3L</span>
+              <span class="bc-prodprice">189 kr</span>
+            </div>
+            <div class="bc-proditem">
+              <div class="bc-prodthumb"></div>
+              <span class="bc-prodname">Underground Sparkling Brut</span>
+              <span class="bc-prodprice">36 kr</span>
+            </div>
+          </div>
+          <div class="bc-footer">
+            <a href="#" class="bc-alllnk">Alla 10 produkter →</a>
+            <a href="#" class="bc-link">Beställ på Systembolaget →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- REWIND -->
+      <div class="bc bc-rw">
+        <div class="bc-hero"><div class="bc-hero-placeholder">RW</div></div>
+        <div class="bc-body">
+          <div class="bc-num">BRAND 02</div>
+          <div class="bc-name">Rewind Spritzers</div>
+          <p class="bc-desc">En uppfriskande remix av räddade viner och mousserande läsk. Gjord på Chardonnay nära sin bäst-före-gräns — bubblande finish med ton av citrus. Alk 7,0% vol.</p>
+          <div class="bc-prodlist">
+            <div class="bc-proditem">
+              <div class="bc-prodthumb"></div>
+              <span class="bc-prodname">Rewind White Spritzer</span>
+              <span class="bc-prodprice">39 kr</span>
+            </div>
+            <div class="bc-proditem">
+              <div class="bc-prodthumb"></div>
+              <span class="bc-prodname">Rewind Rosé Spritzer</span>
+              <span class="bc-prodprice">39 kr</span>
+            </div>
+          </div>
+          <div class="bc-footer">
+            <a href="#" class="bc-link">Rewind Produktsida →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- RÉVOLTE -->
+      <div class="bc bc-dr">
+        <div class="bc-hero"><div class="bc-hero-placeholder">DR</div></div>
+        <div class="bc-body">
+          <div class="bc-num">BRAND 03</div>
+          <div class="bc-name">Domaine de Révolte</div>
+          <p class="bc-desc">Små experimentella batchar som släpps när ett ovanligt blendingstillfälle uppstår. Numrerade och certifierade. Sällsynta per definition.</p>
+          <div class="bc-prodlist">
+            <div class="bc-proditem">
+              <div class="bc-prodthumb"></div>
+              <span class="bc-prodname">Révolte 001 Rosé</span>
+              <span class="bc-prodprice" style="font-size:10px;opacity:.6;">/ 1230</span>
+            </div>
+            <div class="bc-proditem">
+              <div class="bc-prodthumb"></div>
+              <span class="bc-prodname">Révolte 001 Red</span>
+              <span class="bc-prodprice" style="font-size:10px;opacity:.6;">/ 823</span>
+            </div>
+          </div>
+          <div style="font-size:10px;letter-spacing:2px;color:var(--dr);text-transform:uppercase;margin-bottom:14px;">✦ Limited — /1230 flaskor</div>
+          <div class="bc-footer">
+            <a href="#" class="bc-link">Beställningssortiment →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREMIUM COCKTAILS -->
+      <div class="bc bc-pc">
+        <div class="bc-hero"><div class="bc-hero-placeholder">PC</div></div>
+        <div class="bc-body">
+          <div class="bc-num">BRAND 04</div>
+          <div class="bc-name">Premium Cocktails</div>
+          <p class="bc-desc">Alkoholfria och alkoholhaltiga drycker blandade med vin för att förstärka sensorisk komplexitet. Kleine premium-batchar i burk och glasflaska.</p>
+          <div class="bc-prodlist">
+            <div class="bc-proditem">
+              <div class="bc-prodthumb"></div>
+              <span class="bc-prodname">Wine Tonic Rosé Zero</span>
+              <span class="bc-prodprice">19 kr</span>
+            </div>
+            <div class="bc-proditem">
+              <div class="bc-prodthumb"></div>
+              <span class="bc-prodname">Negroni Spritzer 6,8%</span>
+              <span class="bc-prodprice">—</span>
+            </div>
+          </div>
+          <div class="bc-footer">
+            <a href="#" class="bc-link">Mer info →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS med filter -->
+<section id="products" style="padding:80px 48px;">
+  <div class="inner">
+    <div class="sl">Selected Products</div>
+    <h2 class="sh" style="margin-bottom:36px;">Wines &amp;<br>Products</h2>
+
+    <div class="brand-filter">
+      <button class="bf-btn active" data-filter="all">Alla</button>
+      <button class="bf-btn" data-filter="uw" style="--fc:var(--uw)">Underground</button>
+      <button class="bf-btn" data-filter="rw" style="--fc:var(--rw)">Rewind</button>
+      <button class="bf-btn" data-filter="dr" style="--fc:var(--dr)">Révolte</button>
+      <button class="bf-btn" data-filter="pc" style="--fc:var(--pc)">Cocktails</button>
+    </div>
+
+    <div class="pgrid" id="pgrid">
+      <div class="pc" data-brand="uw">
+        <div class="pc-wrap"><div class="pc-img-placeholder">Underground<br>Red BiB</div></div>
+        <div class="pci"><div class="pct">Underground Wines</div><div class="pcn">Underground Red BiB</div><div class="pcp">249 kr</div><div class="pcv">3 L · Bag-in-Box</div><p class="pcnote">Elegant rödvin, subtil tanninstruktur.</p></div>
+        <a href="#" class="pc-btn">Beställ →</a>
+      </div>
+      <div class="pc" data-brand="uw">
+        <div class="pc-wrap"><div class="pc-img-placeholder">Underground<br>Sparkling</div></div>
+        <div class="pci"><div class="pct">Underground Wines</div><div class="pcn">Underground Sparkling Brut</div><div class="pcp">36 kr</div><div class="pcv">250 ml · Burk</div><p class="pcnote">Fräsch mousse. Upcycled sparkling.</p></div>
+        <a href="#" class="pc-btn">Beställ →</a>
+      </div>
+      <div class="pc" data-brand="rw">
+        <div class="pc-wrap"><div class="pc-img-placeholder">Rewind<br>White</div></div>
+        <div class="pci"><div class="pct">Rewind Spritzers</div><div class="pcn">Rewind White Spritzer</div><div class="pcp">39 kr</div><div class="pcv">250 ml · Alc 7,0%</div><p class="pcnote">Chardonnay, sparkling finish, citrus.</p></div>
+        <a href="#" class="pc-btn">Beställ →</a>
+      </div>
+      <div class="pc" data-brand="rw">
+        <div class="pc-wrap"><div class="pc-img-placeholder">Rewind<br>Rosé</div></div>
+        <div class="pci"><div class="pct">Rewind Spritzers</div><div class="pcn">Rewind Rosé Spritzer</div><div class="pcp">39 kr</div><div class="pcv">250 ml · Alc 6,0%</div><p class="pcnote">Räddad rosé, vilda jordgubbar.</p></div>
+        <a href="#" class="pc-btn">Beställ →</a>
+      </div>
+      <div class="pc" data-brand="dr">
+        <div class="pc-wrap"><div class="pc-img-placeholder">Révolte<br>001 Rosé</div></div>
+        <div class="pci"><div class="pct">Domaine de Révolte</div><div class="pcn">Révolte 001 Rosé</div><div class="pcp">—</div><div class="pcv">750 ml · /1230 Limited</div><p class="pcnote">Rosé Wine · European Union Wine.</p></div>
+        <a href="#" class="pc-btn">Beställningssortiment →</a>
+      </div>
+      <div class="pc" data-brand="dr">
+        <div class="pc-wrap"><div class="pc-img-placeholder">Révolte<br>001 Red</div></div>
+        <div class="pci"><div class="pct">Domaine de Révolte</div><div class="pcn">Révolte 001 Red</div><div class="pcp">—</div><div class="pcv">750 ml · /823 Limited</div><p class="pcnote">Red Wine · European Union Wine.</p></div>
+        <a href="#" class="pc-btn">Beställningssortiment →</a>
+      </div>
+      <div class="pc" data-brand="pc">
+        <div class="pc-wrap"><div class="pc-img-placeholder">Wine Tonic<br>Rosé Zero</div></div>
+        <div class="pci"><div class="pct">Premium Cocktails</div><div class="pcn">Wine Tonic Rosé Zero</div><div class="pcp">19 kr</div><div class="pcv">250 ml · Alkoholfri</div><p class="pcnote">Rosé, råtonic, sichuanpeppar &amp; ingefära.</p></div>
+        <a href="#" class="pc-btn">Beställ →</a>
+      </div>
+      <div class="pc" data-brand="pc">
+        <div class="pc-wrap"><div class="pc-img-placeholder">Negroni<br>Spritzer</div></div>
+        <div class="pci"><div class="pct">Premium Cocktails</div><div class="pcn">Negroni Spritzer</div><div class="pcp">—</div><div class="pcv">250 ml · Alc 6,8%</div><p class="pcnote">Bitter, Crisp &amp; Tangy.</p></div>
+        <a href="#" class="pc-btn">Beställ →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MUSIK FILTER PREVIEW -->
+<div style="padding:0 0 40px;">
+  <div class="sl" style="padding:0 48px;margin-bottom:0;">Musik &amp; Vin — filterknappar</div>
+  <div class="musik-filter">
+    <button class="mf-btn active" data-filter="all">Alla</button>
+    <button class="mf-btn" data-filter="uw" data-brand="uw">Underground</button>
+    <button class="mf-btn" data-filter="rw" data-brand="rw">Rewind</button>
+    <button class="mf-btn" data-filter="dr" data-brand="dr">Révolte</button>
+    <button class="mf-btn" data-filter="pc" data-brand="pc">Cocktails</button>
+    <button class="mf-btn" data-filter="sparkling">Sparkling</button>
+    <button class="mf-btn" data-filter="white">Vitt</button>
+    <button class="mf-btn" data-filter="red">Rött</button>
+    <button class="mf-btn" data-filter="rose">Rosé</button>
+  </div>
+</div>
+
+<script>
+// Product filter
+document.querySelectorAll('.bf-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.bf-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    document.querySelectorAll('#pgrid .pc').forEach(card => {
+      card.style.display = (f === 'all' || card.dataset.brand === f) ? 'flex' : 'none';
+    });
+  });
+});
+// Musik filter preview
+document.querySelectorAll('.mf-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.mf-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

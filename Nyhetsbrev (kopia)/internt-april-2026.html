@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strange Estate — Intern uppdatering April 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+  :root {
+    --orange: #fa6000;
+    --teal: #00a8b5;
+    --ink: #141414;
+    --paper: #f7f5f2;
+    --paper2: #eeeae4;
+    --mid: #888;
+    --green: #1a7a4a;
+    --red: #cc3333;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Manrope', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.6; }
+
+  nav {
+    background: var(--ink); padding: 1rem 3rem;
+    display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 0; z-index: 1000;
+  }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 3px; color: var(--orange); }
+  .nav-logo span { color: #fff; }
+  .nav-meta { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+
+  .hero { background: var(--ink); padding: 3.5rem 3rem 3rem; border-bottom: 3px solid var(--orange); }
+  .hero-inner { max-width: 1200px; margin: 0 auto; }
+  .hero-label { font-size: 0.62rem; letter-spacing: 3px; text-transform: uppercase; color: var(--orange); margin-bottom: 0.75rem; }
+  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 7vw, 5.5rem); line-height: 0.92; color: #fff; margin-bottom: 1.25rem; }
+  .hero-title span { color: var(--orange); }
+  .hero-sub { font-size: 0.9rem; color: rgba(255,255,255,0.45); max-width: 640px; line-height: 1.75; }
+
+  .metrics { background: var(--paper2); border-bottom: 1px solid #ddd; padding: 1.75rem 3rem; }
+  .metrics-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(5,1fr); gap: 0; }
+  .metric { text-align: center; padding: 0 1rem; border-right: 1px solid #ddd; }
+  .metric:last-child { border-right: none; }
+  .metric-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.6rem; line-height: 1; color: var(--orange); }
+  .metric-num.teal { color: var(--teal); }
+  .metric-num.green { color: var(--green); }
+  .metric-label { font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase; color: var(--mid); margin-top: 0.25rem; }
+  .metric-sub { font-size: 0.7rem; color: #aaa; margin-top: 0.15rem; }
+
+  .section { padding: 2.5rem 3rem; border-bottom: 1px solid #e5e0d8; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-label { font-size: 0.58rem; letter-spacing: 3px; text-transform: uppercase; color: var(--orange); margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.6rem; }
+  .section-label::after { content: ''; display: block; width: 28px; height: 1px; background: var(--orange); }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--ink); margin-bottom: 1.5rem; letter-spacing: 1px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; }
+
+  /* MAP */
+  #map { height: 520px; border-radius: 4px; border: 1px solid #ddd; }
+
+  /* REPEAT TABLE */
+  .repeat-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .repeat-table th { font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); padding: 0.55rem 0.75rem; text-align: left; border-bottom: 2px solid var(--orange); white-space: nowrap; }
+  .repeat-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid #e5e0d8; color: #444; vertical-align: middle; }
+  .repeat-table tr:last-child td { border-bottom: none; }
+  .repeat-table .rank { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--orange); line-height: 1; }
+  .repeat-table .store-num { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--ink); letter-spacing: 1px; }
+  .repeat-table .amt { font-weight: 700; color: var(--orange); }
+  .freq-bar { height: 4px; background: #e5e0d8; border-radius: 2px; margin-top: 4px; }
+  .freq-fill { height: 4px; background: var(--orange); border-radius: 2px; }
+
+  /* ALL STORES TABLE */
+  .all-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+  .all-table th { font-size: 0.55rem; letter-spacing: 2px; text-transform: uppercase; color: var(--mid); padding: 0.5rem 0.6rem; text-align: left; border-bottom: 1px solid #ddd; }
+  .all-table td { padding: 0.45rem 0.6rem; border-bottom: 1px solid #f0ece6; color: #555; }
+  .all-table tr.repeat-row td { background: rgba(250,96,0,0.04); }
+  .all-table tr.repeat-row td:first-child { border-left: 2px solid var(--orange); }
+  .store-badge { display: inline-block; font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; color: var(--ink); letter-spacing: 1px; }
+  .badge-repeat { display: inline-block; font-size: 0.55rem; letter-spacing: 1px; text-transform: uppercase; padding: 1px 5px; background: rgba(250,96,0,0.1); color: var(--orange); border: 1px solid rgba(250,96,0,0.3); border-radius: 2px; margin-left: 4px; vertical-align: middle; }
+
+  /* HORECA */
+  table.data-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  table.data-table th { font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); padding: 0.55rem 0.75rem; text-align: left; border-bottom: 2px solid var(--orange); }
+  table.data-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid #e5e0d8; color: #444; }
+  table.data-table tr.tr-total td { background: rgba(250,96,0,0.05); color: var(--orange) !important; font-weight: 700; border-top: 1px solid rgba(250,96,0,0.2); }
+  .td-name { font-weight: 600; color: var(--ink); }
+  .td-green { color: var(--green) !important; font-weight: 600; }
+  .td-red { color: var(--red) !important; }
+  .td-orange { color: var(--orange) !important; font-weight: 600; }
+
+  /* BAR */
+  .bar-row { margin-bottom: 0.65rem; }
+  .bar-top { display: flex; justify-content: space-between; margin-bottom: 0.2rem; font-size: 0.78rem; }
+  .bar-name { color: #555; }
+  .bar-val { font-family: 'Bebas Neue', sans-serif; font-size: 0.85rem; color: var(--orange); }
+  .bar-track { height: 3px; background: #e5e0d8; border-radius: 2px; }
+  .bar-fill { height: 3px; background: var(--orange); border-radius: 2px; }
+  .bar-fill.teal { background: var(--teal); }
+
+  /* CARDS */
+  .card { background: #fff; border: 1px solid #e5e0d8; border-radius: 3px; padding: 1.1rem; }
+  .card-num { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--orange); line-height: 1; }
+  .card-num.teal { color: var(--teal); }
+  .card-label { font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase; color: var(--mid); margin: 0.25rem 0; }
+  .card-text { font-size: 0.78rem; color: #666; line-height: 1.5; }
+
+  .note { background: rgba(0,168,181,0.06); border-left: 3px solid var(--teal); padding: 0.75rem 1rem; font-size: 0.78rem; color: #555; line-height: 1.65; margin-top: 0.9rem; }
+  .note strong { color: var(--teal); }
+  .alert { background: rgba(250,96,0,0.05); border-left: 3px solid var(--orange); padding: 0.75rem 1rem; font-size: 0.78rem; color: #555; line-height: 1.65; margin-top: 0.75rem; }
+  .alert strong { color: var(--orange); }
+  .success { background: rgba(26,122,74,0.05); border-left: 3px solid var(--green); padding: 0.75rem 1rem; font-size: 0.78rem; color: #555; line-height: 1.65; margin-top: 0.75rem; }
+  .success strong { color: var(--green); }
+
+  /* ACTION */
+  .steps { display: flex; gap: 0; margin-top: 1.75rem; position: relative; }
+  .steps::before { content: ''; position: absolute; top: 6px; left: 1rem; right: 1rem; height: 1px; background: linear-gradient(90deg, var(--orange), var(--teal)); opacity: 0.3; }
+  .step { flex: 1; text-align: center; padding: 0 0.4rem; }
+  .step-dot { width: 13px; height: 13px; border-radius: 50%; background: var(--orange); margin: 0 auto 0.5rem; position: relative; z-index: 1; border: 2px solid #f7f5f2; box-shadow: 0 0 0 2px var(--orange); }
+  .step:nth-child(even) .step-dot { background: var(--teal); box-shadow: 0 0 0 2px var(--teal); }
+  .step-num { font-size: 0.58rem; color: var(--mid); letter-spacing: 2px; }
+  .step-title { font-size: 0.75rem; font-weight: 700; color: #fff; margin: 0.15rem 0; }
+  .step-body { font-size: 0.68rem; color: rgba(255,255,255,0.45); line-height: 1.4; }
+
+  footer { background: var(--ink); color: rgba(255,255,255,0.35); padding: 1.75rem 3rem; font-size: 0.72rem; }
+  footer .f-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+  footer strong { color: var(--orange); font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 2px; }
+
+  @media (max-width: 900px) {
+    .metrics-inner { grid-template-columns: repeat(3,1fr); }
+    .two-col { grid-template-columns: 1fr; }
+    .three-col { grid-template-columns: 1fr 1fr; }
+    nav, .hero, .section { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .metrics { padding-left: 1.5rem; padding-right: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">STRANGE<span>.</span>ESTATE</div>
+  <div class="nav-meta">Intern · April 2026</div>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">Intern uppdatering · April 2026</div>
+    <div class="hero-title">SYSTEMBOLAGET<br><span>53 BUTIKER</span> — JAN–APR 2026</div>
+    <div class="hero-sub">Baserat på Exacta orderdata t.o.m 14 april 2026. 7 butiker med repeatorder. Total försäljning 18 108 kr via Systembolaget-kanalen.</div>
+  </div>
+</div>
+
+<!-- METRICS -->
+<div class="metrics">
+  <div class="metrics-inner">
+    <div class="metric">
+      <div class="metric-num">53</div>
+      <div class="metric-label">Unika butiker</div>
+      <div class="metric-sub">jan–apr 2026</div>
+    </div>
+    <div class="metric">
+      <div class="metric-num">7</div>
+      <div class="metric-label">Repeatorder</div>
+      <div class="metric-sub">återköpta butiker</div>
+    </div>
+    <div class="metric">
+      <div class="metric-num">63</div>
+      <div class="metric-label">Totalt orders</div>
+      <div class="metric-sub">exkl. annullerade</div>
+    </div>
+    <div class="metric">
+      <div class="metric-num teal">18 108</div>
+      <div class="metric-label">Total försäljning</div>
+      <div class="metric-sub">kr jan–apr</div>
+    </div>
+    <div class="metric">
+      <div class="metric-num green">+101%</div>
+      <div class="metric-label">HORECA tillväxt</div>
+      <div class="metric-sub">april vs Q1</div>
+    </div>
+  </div>
+</div>
+
+<!-- KARTA + REPEAT RANKING -->
+<div class="section">
+  <div class="section-inner">
+    <div class="section-label">Kanal 1 · Systembolaget</div>
+    <div class="section-title">BUTIKSKARTA & REPEATORDER-RANKING</div>
+    <div class="two-col">
+
+      <!-- LEAFLET KARTA -->
+      <div>
+        <div id="map"></div>
+        <div style="display:flex;gap:1.5rem;margin-top:0.75rem;font-size:0.7rem;color:var(--mid)">
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--orange);margin-right:5px;vertical-align:middle"></span>Repeatorder</span>
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--teal);margin-right:5px;vertical-align:middle"></span>Engångsorder</span>
+        </div>
+      </div>
+
+      <!-- REPEAT RANKING -->
+      <div>
+        <div style="font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--mid);margin-bottom:0.75rem">Repeatorder — rangordning efter antal orders</div>
+        <table class="repeat-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Butik</th>
+              <th>Ort</th>
+              <th>Orders</th>
+              <th>Totalt</th>
+              <th>Frekvens</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="rank">1</span></td>
+              <td><span class="store-num">1899</span></td>
+              <td>Åkersberga</td>
+              <td style="font-weight:700;color:var(--orange)">5×</td>
+              <td class="amt">810 kr</td>
+              <td><div class="freq-bar"><div class="freq-fill" style="width:100%"></div></div></td>
+            </tr>
+            <tr>
+              <td><span class="rank">2</span></td>
+              <td><span class="store-num">2299</span></td>
+              <td>Linköping Tornby</td>
+              <td style="font-weight:700;color:var(--orange)">3×</td>
+              <td class="amt">410 kr</td>
+              <td><div class="freq-bar"><div class="freq-fill" style="width:60%"></div></div></td>
+            </tr>
+            <tr>
+              <td><span class="rank">3</span></td>
+              <td><span class="store-num">1417</span></td>
+              <td>Nacka Sickla</td>
+              <td style="font-weight:700;color:var(--orange)">2×</td>
+              <td class="amt">419 kr</td>
+              <td><div class="freq-bar"><div class="freq-fill" style="width:40%"></div></div></td>
+            </tr>
+            <tr>
+              <td><span class="rank">3</span></td>
+              <td><span class="store-num">0902</span></td>
+              <td>Västerås Erikslund</td>
+              <td style="font-weight:700;color:var(--orange)">2×</td>
+              <td class="amt">410 kr</td>
+              <td><div class="freq-bar"><div class="freq-fill" style="width:40%"></div></div></td>
+            </tr>
+            <tr>
+              <td><span class="rank">3</span></td>
+              <td><span class="store-num">2302</span></td>
+              <td>Norrköping</td>
+              <td style="font-weight:700;color:var(--orange)">2×</td>
+              <td class="amt">274 kr</td>
+              <td><div class="freq-bar"><div class="freq-fill" style="width:40%"></div></div></td>
+            </tr>
+            <tr>
+              <td><span class="rank">3</span></td>
+              <td><span class="store-num">2005</span></td>
+              <td>Örebro Åkanten</td>
+              <td style="font-weight:700;color:var(--orange)">2×</td>
+              <td class="amt">283 kr</td>
+              <td><div class="freq-bar"><div class="freq-fill" style="width:40%"></div></div></td>
+            </tr>
+            <tr>
+              <td><span class="rank">3</span></td>
+              <td><span class="store-num">1409</span></td>
+              <td>Haninge Handen</td>
+              <td style="font-weight:700;color:var(--orange)">2×</td>
+              <td class="amt">274 kr</td>
+              <td><div class="freq-bar"><div class="freq-fill" style="width:40%"></div></div></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="success">
+          <strong>Stark signal:</strong> Butik 1899 Åkersberga har beställt 5 gånger — högsta frekvens i hela nätverket. Prioritera uppsök och personlig kontakt.
+        </div>
+
+        <!-- MÅNADSVIS -->
+        <div style="margin-top:1.5rem;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--mid);margin-bottom:0.6rem">Månadsvis Systembolaget</div>
+        <table class="data-table">
+          <thead><tr><th>Månad</th><th>Belopp</th><th>Orders</th></tr></thead>
+          <tbody>
+            <tr><td class="td-name">Januari</td><td class="td-orange">8 659 kr</td><td>37 orders · 26 butiker</td></tr>
+            <tr><td class="td-name">Februari</td><td class="td-orange">4 598 kr</td><td>9 orders</td></tr>
+            <tr><td class="td-name">Mars</td><td class="td-orange">10 984 kr</td><td>37 orders · 34 butiker</td></tr>
+            <tr class="tr-total"><td>Q1 Totalt</td><td>26 020 kr</td><td>85+ orders</td></tr>
+            <tr><td class="td-name">April (pågår)</td><td class="td-orange">3 019 kr</td><td>11 orders</td></tr>
+            <tr class="tr-total"><td>Jan–Apr</td><td>29 038 kr</td><td>96+ orders</td></tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top:1.25rem;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--mid);margin-bottom:0.6rem">Mest sålda produkter · Systembolaget jan–apr</div>
+        <table class="data-table">
+          <thead><tr><th>Produkt</th><th>Art.nr</th><th>Antal</th><th>%</th></tr></thead>
+          <tbody>
+            <tr><td class="td-name">UW Sparkling Can 250ml</td><td style="font-family:'Bebas Neue',sans-serif;font-size:0.8rem;color:var(--mid)">7754734</td><td class="td-orange">192 st</td><td>66%</td></tr>
+            <tr><td class="td-name">UW Red Can 250ml</td><td style="font-family:'Bebas Neue',sans-serif;font-size:0.8rem;color:var(--mid)">7598935</td><td class="td-orange">30 st</td><td>10%</td></tr>
+            <tr><td class="td-name">UW White BiB 3L</td><td style="font-family:'Bebas Neue',sans-serif;font-size:0.8rem;color:var(--mid)">7685808</td><td class="td-orange">24 st</td><td>8%</td></tr>
+            <tr><td class="td-name">UW Rosé Pouch 3L</td><td style="font-family:'Bebas Neue',sans-serif;font-size:0.8rem;color:var(--mid)">7697208</td><td class="td-orange">15 st</td><td>5%</td></tr>
+            <tr><td class="td-name">UW Red Pouch 3L</td><td style="font-family:'Bebas Neue',sans-serif;font-size:0.8rem;color:var(--mid)">7633608</td><td class="td-orange">12 st</td><td>4%</td></tr>
+            <tr><td class="td-name">UW White Can 250ml</td><td style="font-family:'Bebas Neue',sans-serif;font-size:0.8rem;color:var(--mid)">7829934</td><td class="td-orange">10 st</td><td>3%</td></tr>
+            <tr><td class="td-name">UW White Pouch + Rosé BiB</td><td style="font-family:'Bebas Neue',sans-serif;font-size:0.8rem;color:var(--mid)">—</td><td class="td-orange">7 st</td><td>2%</td></tr>
+            <tr class="tr-total"><td>Totalt</td><td></td><td>290 st</td><td>100%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ALLA BUTIKER TABELL -->
+    <div style="margin-top:2rem">
+      <div style="font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--mid);margin-bottom:0.75rem">Alla 53 butiker — jan–apr 2026 (orange = repeatorder)</div>
+      <div style="columns:3;column-gap:1.5rem">
+        <table class="all-table" style="width:100%;break-inside:avoid">
+          <thead><tr><th>Butik</th><th>Ort</th><th>Orders</th><th>Total</th></tr></thead>
+          <tbody>
+            <tr class="repeat-row"><td><span class="store-badge">1899</span><span class="badge-repeat">5×</span></td><td>Åkersberga</td><td>5</td><td>810 kr</td></tr>
+            <tr class="repeat-row"><td><span class="store-badge">2299</span><span class="badge-repeat">3×</span></td><td>Linköping</td><td>3</td><td>410 kr</td></tr>
+            <tr class="repeat-row"><td><span class="store-badge">1417</span><span class="badge-repeat">2×</span></td><td>Nacka Sickla</td><td>2</td><td>419 kr</td></tr>
+            <tr class="repeat-row"><td><span class="store-badge">0902</span><span class="badge-repeat">2×</span></td><td>Västerås</td><td>2</td><td>410 kr</td></tr>
+            <tr class="repeat-row"><td><span class="store-badge">2302</span><span class="badge-repeat">2×</span></td><td>Norrköping</td><td>2</td><td>274 kr</td></tr>
+            <tr class="repeat-row"><td><span class="store-badge">2005</span><span class="badge-repeat">2×</span></td><td>Örebro</td><td>2</td><td>283 kr</td></tr>
+            <tr class="repeat-row"><td><span class="store-badge">1409</span><span class="badge-repeat">2×</span></td><td>Haninge</td><td>2</td><td>274 kr</td></tr>
+            <tr><td><span class="store-badge">0133</span></td><td>Sollentuna</td><td>1</td><td>1 259 kr</td></tr>
+            <tr><td><span class="store-badge">0151</span></td><td>Sthlm Hötorget</td><td>1</td><td>3 605 kr</td></tr>
+            <tr><td><span class="store-badge">1308</span></td><td>Sthlm Södermalm</td><td>1</td><td>834 kr</td></tr>
+            <tr><td><span class="store-badge">0199</span></td><td>Sthlm Hammarby</td><td>1</td><td>534 kr</td></tr>
+            <tr><td><span class="store-badge">0525</span></td><td>Uppsala S:t Per</td><td>1</td><td>544 kr</td></tr>
+            <tr><td><span class="store-badge">0504</span></td><td>Uppsala</td><td>1</td><td>551 kr</td></tr>
+            <tr><td><span class="store-badge">1253</span></td><td>Sthlm Norrmalm</td><td>1</td><td>417 kr</td></tr>
+            <tr><td><span class="store-badge">1259</span></td><td>Nacka Forum</td><td>1</td><td>408 kr</td></tr>
+            <tr><td><span class="store-badge">0221</span></td><td>Sthlm Östermalm</td><td>1</td><td>413 kr</td></tr>
+            <tr><td><span class="store-badge">0235</span></td><td>Sthlm Södermalm</td><td>1</td><td>360 kr</td></tr>
+            <tr><td><span class="store-badge">0209</span></td><td>Sthlm Kungsholmen</td><td>1</td><td>281 kr</td></tr>
+            <tr><td><span class="store-badge">0237</span></td><td>Sthlm Skärholmen</td><td>1</td><td>267 kr</td></tr>
+            <tr><td><span class="store-badge">0246</span></td><td>Lidingö</td><td>1</td><td>267 kr</td></tr>
+            <tr><td><span class="store-badge">1521</span></td><td>Gbg Frölunda</td><td>1</td><td>274 kr</td></tr>
+            <tr><td><span class="store-badge">0902</span></td><td>Västerås</td><td>1</td><td>272 kr</td></tr>
+            <tr><td><span class="store-badge">2019</span></td><td>Kristianstad</td><td>1</td><td>272 kr</td></tr>
+            <tr><td><span class="store-badge">0516</span></td><td>Köping</td><td>1</td><td>275 kr</td></tr>
+            <tr><td><span class="store-badge">1437</span></td><td>Tyresö</td><td>1</td><td>275 kr</td></tr>
+            <tr><td><span class="store-badge">1213</span></td><td>Västerås C</td><td>1</td><td>274 kr</td></tr>
+            <tr><td><span class="store-badge">1101</span></td><td>Eskilstuna C</td><td>1</td><td>263 kr</td></tr>
+            <tr><td><span class="store-badge">2003</span></td><td>Mjölby</td><td>1</td><td>267 kr</td></tr>
+            <tr><td><span class="store-badge">2106</span></td><td>Söderköping</td><td>1</td><td>134 kr</td></tr>
+            <tr><td><span class="store-badge">0601</span></td><td>Eskilstuna</td><td>1</td><td>138 kr</td></tr>
+            <tr><td><span class="store-badge">1414</span></td><td>Motala</td><td>1</td><td>180 kr</td></tr>
+            <tr><td><span class="store-badge">0311</span></td><td>Jönköping</td><td>1</td><td>145 kr</td></tr>
+            <tr><td><span class="store-badge">1301</span></td><td>Värnamo</td><td>1</td><td>138 kr</td></tr>
+            <tr><td><span class="store-badge">1246</span></td><td>Gävle</td><td>1</td><td>136 kr</td></tr>
+            <tr><td><span class="store-badge">1311</span></td><td>Sala</td><td>1</td><td>136 kr</td></tr>
+            <tr><td><span class="store-badge">1202</span></td><td>Sundsvall</td><td>1</td><td>138 kr</td></tr>
+            <tr><td><span class="store-badge">2503</span></td><td>Umeå</td><td>1</td><td>138 kr</td></tr>
+            <tr><td><span class="store-badge">2401</span></td><td>Härnösand</td><td>1</td><td>138 kr</td></tr>
+            <tr><td><span class="store-badge">2511</span></td><td>Kalmar</td><td>1</td><td>134 kr</td></tr>
+            <tr><td><span class="store-badge">0801</span></td><td>Helsingborg</td><td>1</td><td>136 kr</td></tr>
+            <tr><td><span class="store-badge">0301</span></td><td>Lund</td><td>1</td><td>136 kr</td></tr>
+            <tr><td><span class="store-badge">0404</span></td><td>Malmö C</td><td>1</td><td>136 kr</td></tr>
+            <tr><td><span class="store-badge">0413</span></td><td>Malmö Mobilia</td><td>1</td><td>136 kr</td></tr>
+            <tr><td><span class="store-badge">1412</span></td><td>Södertälje</td><td>1</td><td>136 kr</td></tr>
+            <tr><td><span class="store-badge">1250</span></td><td>Värmdö</td><td>1</td><td>136 kr</td></tr>
+            <tr><td><span class="store-badge">0231</span></td><td>Sthlm Gamla Stan</td><td>1</td><td>136 kr</td></tr>
+            <tr><td><span class="store-badge">0144</span></td><td>Solna</td><td>1</td><td>138 kr</td></tr>
+            <tr><td><span class="store-badge">1807</span></td><td>Gbg Backaplan</td><td>1</td><td>136 kr</td></tr>
+            <tr><td><span class="store-badge">1602</span></td><td>Gbg Nordstan</td><td>1</td><td>136 kr</td></tr>
+            <tr><td><span class="store-badge">1904</span></td><td>Gbg Mölnlycke</td><td>1</td><td>136 kr</td></tr>
+            <tr><td><span class="store-badge">1515</span></td><td>Mölndal</td><td>1</td><td>134 kr</td></tr>
+            <tr><td><span class="store-badge">0307</span></td><td>Kungsbacka</td><td>1</td><td>134 kr</td></tr>
+            <tr><td><span class="store-badge">0176</span></td><td>Sthlm Farsta</td><td>1</td><td>136 kr</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HORECA -->
+<div class="section" style="background:var(--paper2)">
+  <div class="section-inner">
+    <div class="section-label">Kanal 2</div>
+    <div class="section-title">HORECA — JAN–APR 2026</div>
+
+    <!-- NYCKELTAL -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;margin-bottom:2rem">
+      <div class="card">
+        <div class="card-num">94 645</div>
+        <div class="card-label">Total HORECA</div>
+        <div class="card-text">jan–apr · kr · alla kunder</div>
+      </div>
+      <div class="card" style="border-top:2px solid #1a7a4a">
+        <div class="card-num" style="color:var(--green)">59 610</div>
+        <div class="card-label">Jens Rothman</div>
+        <div class="card-text">5 kunder · ansvarig</div>
+      </div>
+      <div class="card" style="border-top:2px solid var(--teal)">
+        <div class="card-num teal">30 520</div>
+        <div class="card-label">Karl Andersson</div>
+        <div class="card-text">3 kunder · ansvarig</div>
+      </div>
+      <div class="card" style="border-top:2px solid var(--orange)">
+        <div class="card-num">4 515</div>
+        <div class="card-label">Anders C-F</div>
+        <div class="card-text">1 kund · ansvarig</div>
+      </div>
+    </div>
+
+    <!-- PER KUNDANSVARIG -->
+    <div class="three-col" style="margin-bottom:2rem">
+
+      <!-- JENS ROTHMAN -->
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.75rem">
+          <div style="width:10px;height:10px;border-radius:50%;background:var(--green)"></div>
+          <div style="font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--green);font-weight:700">Jens Rothman</div>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Kund</th><th>Belopp</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="td-name">Fotografiska Stockholm AB</td>
+              <td class="td-orange">21 600 kr</td>
+              <td class="td-green">Betald</td>
+            </tr>
+            <tr>
+              <td class="td-name">Mässrestauranger AB</td>
+              <td class="td-orange">25 920 kr</td>
+              <td style="color:var(--red)!important;font-size:0.72rem">
+                Fak #35 förfallen<br>
+                <span style="color:#888;font-size:0.68rem">12 960 kr obetald</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="td-name">Andreja AB</td>
+              <td class="td-orange">4 515 kr</td>
+              <td class="td-green">Betald</td>
+            </tr>
+            <tr>
+              <td class="td-name">Enskede Värdshus</td>
+              <td class="td-orange">4 515 kr</td>
+              <td class="td-green">Betald</td>
+            </tr>
+            <tr>
+              <td class="td-name">Carolas Eko Bistro</td>
+              <td class="td-orange">3 060 kr</td>
+              <td class="td-green">Betald</td>
+            </tr>
+            <tr class="tr-total"><td>Totalt</td><td>59 610 kr</td><td></td></tr>
+          </tbody>
+        </table>
+        <div class="alert" style="margin-top:0.75rem"><strong>Prioritet:</strong> Mässrestauranger fak #35 · 12 960 kr · förfallen 25 feb. Åtgärd nu.</div>
+      </div>
+
+      <!-- KARL ANDERSSON -->
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.75rem">
+          <div style="width:10px;height:10px;border-radius:50%;background:var(--teal)"></div>
+          <div style="font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--teal);font-weight:700">Karl Andersson</div>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Kund</th><th>Belopp</th><th>Antal</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="td-name">Östgöta Nation</td>
+              <td class="td-orange">23 200 kr</td>
+              <td>1 200 fl</td>
+            </tr>
+            <tr>
+              <td class="td-name">Norrlands Nation Uppsala</td>
+              <td class="td-orange">5 100 kr</td>
+              <td>240 fl</td>
+            </tr>
+            <tr>
+              <td class="td-name">Dalarnas Studentkår</td>
+              <td class="td-orange">2 220 kr</td>
+              <td>96 fl</td>
+            </tr>
+            <tr class="tr-total"><td>Totalt</td><td>30 520 kr</td><td>1 536 fl</td></tr>
+          </tbody>
+        </table>
+        <div class="note" style="margin-top:0.75rem"><strong>Nytt segment:</strong> Studentnationer april — hög volympotential. Alla fakturerade 8 apr, förfall 8 maj.</div>
+      </div>
+
+      <!-- ANDERS CRICHTON-FOCK -->
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.75rem">
+          <div style="width:10px;height:10px;border-radius:50%;background:var(--orange)"></div>
+          <div style="font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--orange);font-weight:700">Anders Crichton-Fock</div>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Kund</th><th>Belopp</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="td-name" colspan="3" style="color:#888;font-style:italic;font-size:0.78rem">Ansvarig Systembolaget-kanalen</td>
+            </tr>
+            <tr class="tr-total"><td>HORECA totalt</td><td>0 kr</td><td></td></tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top:1.25rem;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--mid);margin-bottom:0.6rem">Produktmix HORECA jan–apr</div>
+        <div class="bar-row"><div class="bar-top"><span class="bar-name">Rewind White Can</span><span class="bar-val">768 st · 29%</span></div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div></div>
+        <div class="bar-row"><div class="bar-top"><span class="bar-name">Rewind Rosé Can</span><span class="bar-val">768 st · 29%</span></div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div></div>
+        <div class="bar-row"><div class="bar-top"><span class="bar-name">UW Sparkling Can</span><span class="bar-val">480 st · 18%</span></div><div class="bar-track"><div class="bar-fill teal" style="width:62%"></div></div></div>
+        <div class="bar-row"><div class="bar-top"><span class="bar-name">Wine Tonic Rosé</span><span class="bar-val">240 st · 9%</span></div><div class="bar-track"><div class="bar-fill" style="width:31%"></div></div></div>
+        <div class="bar-row"><div class="bar-top"><span class="bar-name">UW White Can</span><span class="bar-val">192 st · 7%</span></div><div class="bar-track"><div class="bar-fill teal" style="width:25%"></div></div></div>
+        <div class="bar-row"><div class="bar-top"><span class="bar-name">Terre Nature Rouge+Blanc</span><span class="bar-val">204 st · 8%</span></div><div class="bar-track"><div class="bar-fill" style="width:27%;opacity:0.5"></div></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ACTION POINTS -->
+<div class="section" style="background:var(--ink)">
+  <div class="section-inner">
+    <div class="section-label" style="color:var(--orange)">Prioriteringar</div>
+    <div class="section-title" style="color:#fff">ACTION POINTS</div>
+    <div style="max-width:580px;padding:0.9rem 1.4rem;background:rgba(250,96,0,0.1);border:1px solid rgba(250,96,0,0.3);margin-bottom:1.75rem">
+      <div style="font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:0.25rem">Absolut fokus</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:#fff">SÄLJA UT BEFINTLIGT LAGER — CA 350 000 KR</div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-dot"></div><div class="step-num">01</div><div class="step-title">Inkassering</div><div class="step-body">Mässrestauranger #35 · 12 960 kr</div></div>
+      <div class="step"><div class="step-dot"></div><div class="step-num">02</div><div class="step-title">SB-kampanj</div><div class="step-body">Sparkling Brut · start 14 apr</div></div>
+      <div class="step"><div class="step-dot"></div><div class="step-num">03</div><div class="step-title">Lagerflyttning</div><div class="step-body">Rewind → Örebro</div></div>
+      <div class="step"><div class="step-dot"></div><div class="step-num">04</div><div class="step-title">Lagernivåer</div><div class="step-body">Min-nivåer i Exacta</div></div>
+      <div class="step"><div class="step-dot"></div><div class="step-num">05</div><div class="step-title">Finland</div><div class="step-body">B2B dagligvara Q2</div></div>
+      <div class="step"><div class="step-dot"></div><div class="step-num">06</div><div class="step-title">Asia-Pacific</div><div class="step-body">HK/Kina Q3 2026</div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="f-inner">
+    <div><strong>STRANGE.ESTATE</strong><br>Intern uppdatering · April 2026 · Konfidentiellt</div>
+    <div style="text-align:right"><a href="https://strangeestate.com" style="color:var(--orange);text-decoration:none">strangeestate.com</a></div>
+  </div>
+</footer>
+
+<script>
+// Leaflet karta
+const map = L.map('map', {
+  center: [62.5, 16.5],
+  zoom: 5,
+  zoomControl: true
+});
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '© OpenStreetMap © CARTO',
+  subdomains: 'abcd',
+  maxZoom: 19
+}).addTo(map);
+
+const stores = [
+  {nr:"0133",ort:"Häggvik/Sollentuna",lat:59.431,lon:17.951,orders:1,total:1259},
+  {nr:"0144",ort:"Solna",lat:59.360,lon:18.002,orders:1,total:138},
+  {nr:"0151",ort:"Stockholm Hötorget",lat:59.335,lon:18.063,orders:1,total:3605},
+  {nr:"0176",ort:"Stockholm Farsta",lat:59.243,lon:18.093,orders:1,total:136},
+  {nr:"0199",ort:"Stockholm Hammarby",lat:59.305,lon:18.087,orders:1,total:534},
+  {nr:"0209",ort:"Stockholm Kungsholmen",lat:59.333,lon:18.029,orders:1,total:281},
+  {nr:"0221",ort:"Stockholm Östermalm",lat:59.338,lon:18.078,orders:1,total:413},
+  {nr:"0231",ort:"Stockholm Gamla Stan",lat:59.324,lon:18.072,orders:1,total:136},
+  {nr:"0235",ort:"Stockholm Södermalm",lat:59.315,lon:18.062,orders:1,total:360},
+  {nr:"0237",ort:"Stockholm Skärholmen",lat:59.276,lon:17.908,orders:1,total:267},
+  {nr:"0246",ort:"Lidingö",lat:59.362,lon:18.144,orders:1,total:267},
+  {nr:"0301",ort:"Lund",lat:55.703,lon:13.193,orders:1,total:136},
+  {nr:"0307",ort:"Kungsbacka",lat:57.490,lon:12.076,orders:1,total:134},
+  {nr:"0310",ort:"Jönköping",lat:57.782,lon:14.160,orders:1,total:145},
+  {nr:"0404",ort:"Malmö Centrum",lat:55.605,lon:13.000,orders:1,total:136},
+  {nr:"0413",ort:"Malmö Mobilia",lat:55.571,lon:13.035,orders:1,total:136},
+  {nr:"0504",ort:"Uppsala",lat:59.860,lon:17.638,orders:1,total:551},
+  {nr:"0511",ort:"Uppsala Gränby",lat:59.870,lon:17.676,orders:1,total:138},
+  {nr:"0516",ort:"Köping",lat:59.514,lon:15.991,orders:1,total:275},
+  {nr:"0525",ort:"Uppsala S:t Per",lat:59.856,lon:17.633,orders:1,total:544},
+  {nr:"0601",ort:"Eskilstuna Tuna Park",lat:59.369,lon:16.498,orders:1,total:138},
+  {nr:"0801",ort:"Helsingborg",lat:56.047,lon:12.694,orders:1,total:136},
+  {nr:"0902",ort:"Västerås Erikslund",lat:59.616,lon:16.545,orders:2,total:410,repeat:true},
+  {nr:"1101",ort:"Eskilstuna Centrum",lat:59.371,lon:16.509,orders:1,total:263},
+  {nr:"1202",ort:"Sundsvall",lat:62.390,lon:17.307,orders:1,total:138},
+  {nr:"1213",ort:"Västerås Centrum",lat:59.609,lon:16.544,orders:1,total:274},
+  {nr:"1246",ort:"Gävle",lat:60.675,lon:17.142,orders:1,total:136},
+  {nr:"1250",ort:"Värmdö/Gustavsberg",lat:59.314,lon:18.393,orders:1,total:136},
+  {nr:"1253",ort:"Stockholm Norrmalmstorg",lat:59.340,lon:18.075,orders:1,total:417},
+  {nr:"1259",ort:"Nacka Forum",lat:59.307,lon:18.162,orders:1,total:408},
+  {nr:"1301",ort:"Värnamo",lat:57.183,lon:14.039,orders:1,total:138},
+  {nr:"1308",ort:"Stockholm Södermalm",lat:59.318,lon:18.065,orders:1,total:834},
+  {nr:"1311",ort:"Sala",lat:59.921,lon:16.607,orders:1,total:136},
+  {nr:"1409",ort:"Haninge Handen",lat:59.155,lon:18.136,orders:2,total:274,repeat:true},
+  {nr:"1412",ort:"Södertälje",lat:59.196,lon:17.624,orders:1,total:136},
+  {nr:"1414",ort:"Motala",lat:58.537,lon:15.038,orders:1,total:180},
+  {nr:"1417",ort:"Nacka Sickla",lat:59.303,lon:18.133,orders:2,total:419,repeat:true},
+  {nr:"1437",ort:"Tyresö",lat:59.244,lon:18.229,orders:1,total:275},
+  {nr:"1515",ort:"Mölndal",lat:57.655,lon:12.013,orders:1,total:134},
+  {nr:"1521",ort:"Göteborg Frölunda",lat:57.647,lon:11.922,orders:1,total:274},
+  {nr:"1602",ort:"Göteborg Nordstan",lat:57.707,lon:11.969,orders:1,total:136},
+  {nr:"1807",ort:"Göteborg Backaplan",lat:57.722,lon:11.951,orders:1,total:136},
+  {nr:"1899",ort:"Åkersberga",lat:59.479,lon:18.298,orders:5,total:810,repeat:true},
+  {nr:"1904",ort:"Göteborg Mölnlycke",lat:57.663,lon:12.120,orders:1,total:136},
+  {nr:"2003",ort:"Mjölby",lat:58.326,lon:15.128,orders:1,total:267},
+  {nr:"2005",ort:"Örebro Åkanten",lat:59.274,lon:15.213,orders:2,total:283,repeat:true},
+  {nr:"2019",ort:"Kristianstad",lat:56.031,lon:14.156,orders:1,total:272},
+  {nr:"2106",ort:"Söderköping",lat:58.481,lon:16.322,orders:1,total:134},
+  {nr:"2299",ort:"Linköping Tornby",lat:58.428,lon:15.575,orders:3,total:410,repeat:true},
+  {nr:"2302",ort:"Norrköping",lat:58.594,lon:16.178,orders:2,total:274,repeat:true},
+  {nr:"2401",ort:"Härnösand",lat:62.634,lon:17.939,orders:1,total:138},
+  {nr:"2503",ort:"Umeå Avion",lat:63.829,lon:20.262,orders:1,total:138},
+  {nr:"2511",ort:"Kalmar",lat:56.661,lon:16.366,orders:1,total:134},
+];
+
+stores.forEach(s => {
+  const color = s.repeat ? '#fa6000' : '#00a8b5';
+  const size = s.repeat ? Math.max(10, s.orders * 4) : 8;
+  const marker = L.circleMarker([s.lat, s.lon], {
+    radius: size,
+    fillColor: color,
+    color: '#fff',
+    weight: 1.5,
+    opacity: 1,
+    fillOpacity: 0.85
+  }).addTo(map);
+
+  marker.bindPopup(`
+    <div style="font-family:Manrope,sans-serif;min-width:160px">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px;color:#141414">#${s.nr}</div>
+      <div style="font-size:0.82rem;font-weight:600;color:#333;margin-bottom:4px">${s.ort}</div>
+      <div style="font-size:0.75rem;color:#666">${s.orders} order${s.orders>1?'s':''} · ${s.total.toLocaleString('sv-SE')} kr</div>
+      ${s.repeat ? `<div style="margin-top:4px;font-size:0.65rem;color:#fa6000;font-weight:700;letter-spacing:1px;text-transform:uppercase">● Repeatorder</div>` : ''}
+    </div>
+  `, {maxWidth: 200});
+});
+</script>
+
+</body>
+</html>

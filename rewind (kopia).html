@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rewind Spritzers — Strange Estate</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+:root{--black:#0a0a0a;--white:#f2ede6;--orange:#fa6000;--teal:#5ce1e6;--yellow:#FFEE58;--pink:#fdbbe0;--navy:#16213f;--mid:#2a2a2a;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Space Grotesk',sans-serif;font-weight:300;overflow-x:hidden;cursor:none;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:900;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");opacity:.4;}
+.cursor{width:10px;height:10px;background:var(--orange);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:exclusion;transition:transform .1s;}
+.cursor-ring{width:34px;height:34px;border:1px solid var(--orange);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);mix-blend-mode:exclusion;transition:width .2s,height .2s;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:rgba(10,10,10,.85);backdrop-filter:blur(12px);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-img{width:28px;height:28px;object-fit:contain;}
+.nav-logo-text{font-family:'Bebas Neue';font-size:18px;letter-spacing:3px;color:var(--white);}
+.nav-logo-text em{color:var(--orange);font-style:normal;}
+.nav-back{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(242,237,230,.5);text-decoration:none;cursor:none;transition:color .2s;}
+.nav-back:hover{color:var(--orange);}
+.nav-right{display:flex;gap:20px;align-items:center;}
+.lang-btn{background:none;border:1px solid rgba(242,237,230,.2);color:var(--white);font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;padding:5px 12px;cursor:none;transition:border-color .2s;}
+.lang-btn:hover{border-color:var(--orange);color:var(--orange);}
+.sl{font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--orange);display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.sl::before{content:'';width:24px;height:1px;background:var(--orange);}
+.fu{opacity:0;transform:translateY(28px);transition:opacity .65s,transform .65s;}
+.fu.on{opacity:1;transform:translateY(0);}
+.fu:nth-child(2){transition-delay:.08s;}.fu:nth-child(3){transition-delay:.16s;}.fu:nth-child(4){transition-delay:.24s;}.fu:nth-child(5){transition-delay:.3s;}.fu:nth-child(6){transition-delay:.35s;}
+.lang-sv,.lang-en{display:none;}
+body.sv .lang-sv,body:not(.sv):not(.en) .lang-sv{display:inline;}
+body.en .lang-en{display:inline;}
+.brand-hero{padding:140px 48px 72px;max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+.brand-hero-img{width:100%;max-height:380px;object-fit:contain;display:block;}
+.brand-hero-img{filter:brightness(0) saturate(100%) invert(84%) sepia(21%) saturate(639%) hue-rotate(295deg) brightness(102%);}
+.brand-hero-tag{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(242,237,230,.3);margin-bottom:16px;}
+.brand-hero-h{font-family:'Bebas Neue';font-size:clamp(52px,8vw,96px);line-height:1;letter-spacing:3px;margin-bottom:20px;}
+.brand-hero-desc{font-size:15px;line-height:1.75;color:rgba(242,237,230,.7);max-width:440px;margin-bottom:28px;}
+.brand-video{width:100%;max-height:500px;overflow:hidden;position:relative;background:#000;}
+.brand-video video{width:100%;height:100%;object-fit:cover;display:block;max-height:500px;}
+.brand-video-cap{position:absolute;bottom:0;left:0;right:0;padding:20px 48px;background:linear-gradient(transparent,rgba(10,10,10,.8));}
+.brand-video-cap p{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(242,237,230,.6);}
+.prod-sec{padding:0 48px 96px;max-width:1240px;margin:0 auto;}
+.prod-header{border-bottom:1px solid rgba(255,255,255,.07);padding-bottom:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+.prod-intro{font-size:14px;line-height:1.8;color:rgba(242,237,230,.6);max-width:700px;margin-bottom:40px;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,.06);}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+/* CARD */
+.pc{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);overflow:hidden;transition:border-color .3s,transform .3s;cursor:none;display:flex;flex-direction:column;}
+.pc:hover{border-color:rgba(250,96,0,.25);transform:translateY(-3px);}
+.pc-wrap{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.05);}
+.pc-wrap img.pi{width:72%;height:72%;object-fit:contain;transition:transform .4s;}
+.pc:hover .pc-wrap img.pi{transform:scale(1.08);}
+.pci{padding:16px 16px 0;display:flex;flex-direction:column;gap:5px;}
+.pct{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--orange);}
+.pcn{font-family:'Bebas Neue';font-size:22px;letter-spacing:.5px;line-height:1.1;}
+.pcp{font-size:15px;font-weight:700;color:var(--orange);}
+.pcv{font-size:10px;color:rgba(242,237,230,.55);margin-top:-2px;}
+/* ACCORDION */
+.pc-toggle{width:100%;background:none;border:none;border-top:1px solid rgba(255,255,255,.07);margin-top:12px;padding:10px 0;text-align:left;color:rgba(242,237,230,.4);font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:none;display:flex;align-items:center;justify-content:space-between;transition:color .2s;}
+.pc-toggle:hover{color:var(--white);}
+.pc-toggle .pc-arr{font-size:10px;transition:transform .25s;display:inline-block;}
+.pc-toggle[aria-expanded="true"] .pc-arr{transform:rotate(180deg);}
+.pc-toggle[aria-expanded="true"]{color:var(--orange);}
+.pc-drawer{max-height:0;overflow:hidden;transition:max-height .45s ease;}
+.pc-drawer.open{max-height:900px;}
+/* DRAWER CONTENT */
+.pc-loc{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--teal);padding:12px 16px 0;opacity:.7;}
+.pc-memory{font-family:'Space Grotesk',sans-serif;font-size:12px;line-height:1.75;color:rgba(242,237,230,.65);padding:10px 16px 14px;border-bottom:1px solid rgba(255,255,255,.05);font-style:italic;}
+.pc-details{padding:12px 16px;display:flex;flex-direction:column;gap:8px;}
+.pc-detail-row{display:grid;grid-template-columns:80px 1fr;gap:8px;align-items:start;}
+.pc-detail-lbl{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(242,237,230,.3);padding-top:1px;}
+.pc-detail-val{font-size:12px;color:rgba(242,237,230,.7);line-height:1.6;}
+/* SPOTIFY */
+.pc-spotify{padding:0 16px 14px;}
+.pc-sp-ph{width:100%;background:rgba(29,185,84,.05);border:1px solid rgba(29,185,84,.15);color:#1DB954;padding:8px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;cursor:none;transition:background .2s;text-align:center;font-family:'Space Grotesk',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;}
+.pc-sp-ph:hover{background:rgba(29,185,84,.12);}
+.pc-spotify iframe{width:100%;border:none;display:block;border-radius:2px;}
+.pc-btn{display:block;margin:auto 16px 16px;background:rgba(250,96,0,.07);border:1px solid rgba(250,96,0,.2);color:var(--orange);padding:10px;text-align:center;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;cursor:none;transition:background .2s;}
+.pc-btn:hover{background:var(--orange);color:var(--black);}
+.bg-db{background:linear-gradient(135deg,#111827,#080e18);}
+.bg-dp{background:linear-gradient(135deg,#1e0a1c,#120614);}
+.bg-sa{background:linear-gradient(135deg,#201008,#130904);}
+.bg-tl{background:linear-gradient(135deg,#071816,#030e0d);}
+.contact-strip{padding:64px 48px;background:rgba(255,255,255,.02);border-top:1px solid rgba(255,255,255,.06);text-align:center;}
+.contact-strip h3{font-family:'Bebas Neue';font-size:36px;letter-spacing:2px;margin-bottom:10px;}
+.contact-strip p{font-size:14px;color:rgba(242,237,230,.55);margin-bottom:22px;}
+.contact-strip a{display:inline-block;background:var(--orange);color:var(--black);font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;padding:13px 28px;text-decoration:none;cursor:none;transition:background .2s;}
+.contact-strip a:hover{background:var(--teal);}
+footer.bf{padding:32px 48px;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;gap:20px;}
+.bf-logo{font-family:'Bebas Neue';font-size:16px;letter-spacing:3px;color:rgba(242,237,230,.25);}
+.bf-logo em{color:var(--orange);font-style:normal;}
+.bf-links{display:flex;gap:24px;flex-wrap:wrap;}
+.bf-links a{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(242,237,230,.3);text-decoration:none;transition:color .2s;}
+.bf-links a:hover{color:var(--orange);}
+@media(max-width:1024px){.pgrid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:900px){
+  nav{padding:14px 20px;}
+  .brand-hero{grid-template-columns:1fr;gap:40px;padding:120px 24px 56px;}
+  .prod-sec{padding:0 24px 72px;}
+  .pgrid{grid-template-columns:repeat(2,1fr);}
+  .contact-strip,.brand-video-cap{padding-left:24px;padding-right:24px;}
+  footer.bf{flex-direction:column;align-items:flex-start;padding:24px;}
+}
+@media(max-width:480px){.pgrid{grid-template-columns:1fr;}}
+
+
+/* BRAND COLOR SYSTEM */
+:root{--uw:#a2d9c0;--rw:#fdbbe0;--dr:#e8e2c8;--pc:#ffb6a6;}
+.pc[data-brand="uw"] .pc-wrap{background:rgba(162,217,192,.07) !important;}
+.pc[data-brand="uw"]{border-color:rgba(162,217,192,.15);}
+.pc[data-brand="uw"]:hover{border-color:rgba(162,217,192,.5);}
+.pc[data-brand="uw"] .pcp{color:var(--uw);}
+.pc[data-brand="uw"] .pct{color:var(--uw);}
+.pc[data-brand="uw"] .pc-btn{background:rgba(162,217,192,.07);border-color:rgba(162,217,192,.25);color:var(--uw);}
+.pc[data-brand="uw"] .pc-btn:hover{background:var(--uw);color:var(--black);}
+.pc[data-brand="rw"] .pc-wrap{background:rgba(253,187,224,.07) !important;}
+.pc[data-brand="rw"]{border-color:rgba(253,187,224,.15);}
+.pc[data-brand="rw"]:hover{border-color:rgba(253,187,224,.5);}
+.pc[data-brand="rw"] .pcp{color:var(--rw);}
+.pc[data-brand="rw"] .pct{color:var(--rw);}
+.pc[data-brand="rw"] .pc-btn{background:rgba(253,187,224,.07);border-color:rgba(253,187,224,.25);color:var(--rw);}
+.pc[data-brand="rw"] .pc-btn:hover{background:var(--rw);color:var(--black);}
+.pc[data-brand="dr"] .pc-wrap{background:rgba(232,226,200,.06) !important;}
+.pc[data-brand="dr"]{border-color:rgba(232,226,200,.15);}
+.pc[data-brand="dr"]:hover{border-color:rgba(232,226,200,.5);}
+.pc[data-brand="dr"] .pcp{color:var(--dr);}
+.pc[data-brand="dr"] .pct{color:var(--dr);}
+.pc[data-brand="dr"] .pc-btn{background:rgba(232,226,200,.06);border-color:rgba(232,226,200,.25);color:var(--dr);}
+.pc[data-brand="dr"] .pc-btn:hover{background:var(--dr);color:var(--black);}
+.pc[data-brand="pc"] .pc-wrap{background:rgba(255,182,166,.06) !important;}
+.pc[data-brand="pc"]{border-color:rgba(255,182,166,.15);}
+.pc[data-brand="pc"]:hover{border-color:rgba(255,182,166,.5);}
+.pc[data-brand="pc"] .pcp{color:var(--pc);}
+.pc[data-brand="pc"] .pct{color:var(--pc);}
+.pc[data-brand="pc"] .pc-btn{background:rgba(255,182,166,.06);border-color:rgba(255,182,166,.25);color:var(--pc);}
+.pc[data-brand="pc"] .pc-btn:hover{background:var(--pc);color:var(--black);}
+</style>
+</head>
+<body>
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="Loggor%20Brands/logo.png" class="nav-logo-img" alt="">
+    <div class="nav-logo-text">STRANGE<em>.</em>ESTATE</div>
+  </a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-back">← Strange Estate</a>
+    <button class="lang-btn" onclick="toggleLang()">EN</button>
+  </div>
+</nav>
+<div class="brand-hero fu">
+  <div>
+    <div class="brand-hero-tag">BRAND 02 — REWIND SPRITZERS</div>
+    <h1 class="brand-hero-h">Rewind<br>Spritzers</h1>
+    <p class="brand-hero-desc lang-sv">Strange Estate, i nära samarbete med Spring Wine &amp; Spirits, presenterar en ny generation spritzdrycker — räddade viner, balanserade smaker, hållbar attityd.</p>
+    <p class="brand-hero-desc lang-en">Strange Estate, in close collaboration with Spring Wine &amp; Spirits, presents a new generation of spritzers — rescued wines, balanced flavours, sustainable attitude.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;">
+    <img src="alla produktbilder i samma format/hero_white_product.png" style="width:100%;height:auto;display:block;border-radius:2px;" alt="Rewind White Spritzer">
+    <img src="alla produktbilder i samma format/hero_rose_product.png" style="width:100%;height:auto;display:block;border-radius:2px;" alt="Rewind Rosé Spritzer">
+  </div>
+</div>
+<div class="brand-video fu">
+  <video autoplay muted loop playsinline><source src="filmer/rewind.mp4" type="video/mp4"></video>
+  <div class="brand-video-cap"><p>Rewind Spritzers · Handcrafted in Stockholm</p></div>
+</div>
+<section class="prod-sec">
+  <div class="prod-header fu">
+    <div class="sl"><span class="lang-sv">Produkter</span><span class="lang-en">Products</span></div>
+  </div>
+  <p class="prod-intro fu">100% rescued wine. Dry, lightly sparkling, handcrafted in Stockholm. The spritzer for the modern wine lover — innovation, flavour, and awareness in one can.</p>
+  <div class="pgrid">
+    <div class="pc fu" data-brand="rw">
+      <div class="pc-wrap bg-tl"><img src="alla%20produktbilder%20i%20samma%20format/rw_white_product.png" class="pi" alt="Rewind White Spritzer"></div>
+      <div class="pci">
+        <div class="pct">Rewind Spritzers</div>
+        <div class="pcn">Rewind White Spritzer</div>
+        
+        <div class="pcp">39 kr</div>
+        <div class="pcv">250 ml · Alc 7,0% · Spritzer #01</div>
+        <button class="pc-toggle" onclick="pcToggle(this)" aria-expanded="false"><span class="lang-sv">Mer info</span><span class="lang-en">More info</span> <span class="pc-arr">▾</span></button>
+      </div>
+      <div class="pc-drawer">
+      <div class="pc-loc"><span class="lang-sv">Johannesburg, Soweto — 14 juni 2019, 20:30</span><span class="lang-en">Johannesburg, Soweto — 14 June 2019, 20:30</span></div>
+      <p class="pc-memory"><span class="lang-sv">Amanxeba tog nästan tio minuter på sig och ingen protesterade. Det var den sortens musik som inte presenterar sig — den anländer. Toshis röst rörde sig ovanpå Dr Feels produktion som om de aldrig befunnit sig på separata platser.</span><span class="lang-en">Amanxeba took almost ten minutes and nobody protested. It was the kind of music that doesn't introduce itself — it arrives. Toshi's voice moved above Dr Feel's production as if they had never been in separate places.</span></p>
+      <div class="pc-details">
+      <div class="pc-detail-row">
+        <div class="pc-detail-lbl"><span class="lang-sv">Smak</span><span class="lang-en">Taste</span></div>
+        <div class="pc-detail-val"><span class="lang-sv">Frisk, lätt, citrus och vit blomma — ren och direkt.</span><span class="lang-en">Fresh, light, citrus and white blossom — clean and direct.</span></div>
+      </div>
+      <div class="pc-detail-row">
+        <div class="pc-detail-lbl"><span class="lang-sv">Musik</span><span class="lang-en">Music</span></div>
+        <div class="pc-detail-val"><span class="lang-sv">Afrohouse och deep house med organisk puls — musik som andas, tar plats och förändrar rumstemperaturen utan att höja volymen.</span><span class="lang-en">Afrohouse and deep house with organic pulse — music that breathes, takes space and changes the room temperature without raising the volume.</span></div>
+      </div>
+      <div class="pc-detail-row">
+        <div class="pc-detail-lbl"><span class="lang-sv">Mat</span><span class="lang-en">Food</span></div>
+        <div class="pc-detail-val"><span class="lang-sv">Skaldjur, fisk, sallader, lätta ostar.</span><span class="lang-en">Shellfish, fish, salads, light cheeses.</span></div>
+      </div>
+      </div>
+      </div>
+  <div class="pc-spotify">
+    <button class="pc-sp-ph" onclick="loadSp(this,'7MK8sICWsvuzV6nKxKorGI')"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg> <span class="lang-sv">Ladda spellista</span><span class="lang-en">Load playlist</span></button>
+  </div>
+      <a href="index.html#contact"  class="pc-btn">Kontakta oss</a>
+    </div>
+    <div class="pc fu" data-brand="rw">
+      <div class="pc-wrap bg-dp"><img src="alla%20produktbilder%20i%20samma%20format/rw_rose_product.png" class="pi" alt="Rewind Rosé Spritzer"></div>
+      <div class="pci">
+        <div class="pct">Rewind Spritzers</div>
+        <div class="pcn">Rewind Rosé Spritzer</div>
+        
+        <div class="pcp">39 kr</div>
+        <div class="pcv">250 ml · Alc 6,0% · Rosé #01</div>
+        <button class="pc-toggle" onclick="pcToggle(this)" aria-expanded="false"><span class="lang-sv">Mer info</span><span class="lang-en">More info</span> <span class="pc-arr">▾</span></button>
+      </div>
+      <div class="pc-drawer">
+      <div class="pc-loc"><span class="lang-sv">Cape Town, Green Point — 31 december 2022, 23:00</span><span class="lang-en">Cape Town, Green Point — 31 December 2022, 23:00</span></div>
+      <p class="pc-memory"><span class="lang-sv">Ompiie Jnr öppnade med Envisions och det tog nästan sju minuter innan man förstod vart det var på väg — och då var man redan där. The Truffle Tribe kom med Drelements och Frank GPs Broken Trumpet avslutade i afrotech, trumman och trumpeten i dialog.</span><span class="lang-en">Ompiie Jnr opened with Envisions and it took almost seven minutes before you understood where it was heading — and then you were already there. The Truffle Tribe came with Drelements and Frank GP's Broken Trumpet finished in afrotech, the drum and trumpet in dialogue.</span></p>
+      <div class="pc-details">
+      <div class="pc-detail-row">
+        <div class="pc-detail-lbl"><span class="lang-sv">Smak</span><span class="lang-en">Taste</span></div>
+        <div class="pc-detail-val"><span class="lang-sv">Lätt, fruktig, blommig antydan med frisk bubblighet.</span><span class="lang-en">Light, fruity, floral hint with fresh effervescence.</span></div>
+      </div>
+      <div class="pc-detail-row">
+        <div class="pc-detail-lbl"><span class="lang-sv">Musik</span><span class="lang-en">Music</span></div>
+        <div class="pc-detail-val"><span class="lang-sv">Afrohouse och afrotech — organisk elektronik med djup afrikansk puls. Musik som rör sig underifrån och upp, varm och rytmiskt oundviklig.</span><span class="lang-en">Afrohouse and afrotech — organic electronics with deep African pulse. Music that moves from the ground up, warm and rhythmically inevitable.</span></div>
+      </div>
+      <div class="pc-detail-row">
+        <div class="pc-detail-lbl"><span class="lang-sv">Mat</span><span class="lang-en">Food</span></div>
+        <div class="pc-detail-val"><span class="lang-sv">Sallad, grillat, plockmat, lättare fisk.</span><span class="lang-en">Salad, grilled food, snacks, lighter fish.</span></div>
+      </div>
+      </div>
+      </div>
+  <div class="pc-spotify">
+    <button class="pc-sp-ph" onclick="loadSp(this,'6QSV1v1dNmPyuQLruvayxi')"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg> <span class="lang-sv">Ladda spellista</span><span class="lang-en">Load playlist</span></button>
+  </div>
+      <a href="index.html#contact"  class="pc-btn">Kontakta oss</a>
+    </div>
+  </div>
+</section>
+<div class="contact-strip fu">
+  <h3><span class="lang-sv">Restaurang &amp; Grossist</span><span class="lang-en">Restaurant &amp; Wholesale</span></h3>
+  <p class="lang-sv">Kontakta oss för restaurang- och grossistpriser.</p><p class="lang-en">Contact us for restaurant and wholesale pricing.</p>
+  <a href="index.html#contact"><span class="lang-sv">Kontakta oss</span><span class="lang-en">Contact us</span></a>
+</div>
+<footer class="bf">
+  <div class="bf-logo">STRANGE<em>.</em>ESTATE</div>
+  <div class="bf-links">
+    <a href="index.html">Startsidan</a>
+    <a href="underground.html">Underground Wines</a>
+    <a href="rewind.html">Rewind Spritzers</a>
+    <a href="revolte.html">Domaine de Révolte</a>
+    <a href="premium.html">Premium Cocktails</a>
+    <a href="index.html#contact">Kontakt</a>
+  </div>
+</footer>
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function loop(){rx+=(mx-rx)*.18;ry+=(my-ry)*.18;if(cur){cur.style.left=mx+'px';cur.style.top=my+'px';}if(ring){ring.style.left=rx+'px';ring.style.top=ry+'px';}requestAnimationFrame(loop);})();
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on');});},{threshold:.08});
+document.querySelectorAll('.fu').forEach(el=>obs.observe(el));
+function toggleLang(){const b=document.body,e=b.classList.contains('en');b.classList.toggle('en',!e);b.classList.toggle('sv',e);document.querySelectorAll('.lang-btn').forEach(btn=>btn.textContent=e?'EN':'SV');}
+document.body.classList.add('sv');
+function pcToggle(btn){const d=btn.parentElement.nextElementSibling,o=btn.getAttribute('aria-expanded')==='true';btn.setAttribute('aria-expanded',String(!o));d.classList.toggle('open',!o);}
+function loadSp(el,pid){el.parentNode.innerHTML='<iframe src="https://open.spotify.com/embed/playlist/'+pid+'?utm_source=generator&theme=0" height="152" frameborder="0" allowfullscreen allow="autoplay;clipboard-write;encrypted-media;fullscreen;picture-in-picture" loading="lazy"></iframe>';}
+</script>
+</body>
+</html>

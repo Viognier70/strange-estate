@@ -1,0 +1,41 @@
+# Strange Estate — Apache configuration
+
+# Allow access to all files
+<FilesMatch ".*">
+    Require all granted
+</FilesMatch>
+
+# Allow access to image directories
+<Directory "alla produktbilder i samma format">
+    Require all granted
+</Directory>
+
+<Directory "filmer">
+    Require all granted
+</Directory>
+
+<Directory "Loggor Brands">
+    Require all granted
+</Directory>
+
+<Directory "Logga certfiering">
+    Require all granted
+</Directory>
+
+<Directory "Bilder design innehåll">
+    Require all granted
+</Directory>
+
+# Set correct MIME types
+AddType video/mp4 .mp4
+AddType image/png .png
+AddType image/jpeg .jpg .jpeg
+AddType text/html .html
+
+# Enable CORS for fonts and media
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+</IfModule>
+
+# Disable directory listing
+Options -Indexes
